@@ -37,12 +37,12 @@ export default async function SitePage({ params }: { params: { id: string } }) {
           <h1 className="text-3xl font-bold">{site.name}</h1>
           <p className="text-gray-500 mt-1">
             <a
-              href={`${process.env.PROTOCOL}${site.subdomain}.${process.env.BASE_DOMAIN}`}
+              href={`${process.env.PROTOCOL}${site.subdomain}.${process.env.BASE_DOMAIN}:${process.env.PORT}`}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:underline"
             >
-              {site.subdomain}.{process.env.BASE_DOMAIN}
+              {site.subdomain}.{process.env.BASE_DOMAIN}:{process.env.PORT}
             </a>
           </p>
         </div>
@@ -83,7 +83,7 @@ export default async function SitePage({ params }: { params: { id: string } }) {
                     >
                       {post.published ? "Published" : "Draft"}
                     </span>
-                    <Link href={`/app/post/${post.id}`}>
+                    <Link href={`/admin/post/${post.id}`}>
                       <Button variant="outline" size="sm">
                         Edit
                       </Button>

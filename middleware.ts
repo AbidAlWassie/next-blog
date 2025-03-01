@@ -20,8 +20,6 @@ export default async function middleware(req: NextRequest) {
   const hostname = req.headers.get("host") || "";
   const path = url.pathname;
 
-  // Get the pathname of the request (e.g. /, /about, /blog/first-post)
-
   // Define which hostnames are considered "main app" hostnames
   // and which are considered site hostnames
   const currentHost =
@@ -32,19 +30,13 @@ export default async function middleware(req: NextRequest) {
           ""
         );
 
-  // Prevent security issues – users should not be able to canonically access
-  // the pages/sites folder and its subdirectories directly
-  if (path.startsWith(`/sites`)) {
-    return NextResponse.rewrite(new URL("/404", req.url));
-  }
-
   // Special case for localhost development
   if (hostname === "localhost:3000" || hostname === process.env.BASE_DOMAIN) {
-    return NextResponse.rewrite(new URL(`/home${path}`, req.url));
+    return NextResponse.rewrite(new URL(`${path}`, req.url));
   }
 
   // Rewrite for site subdomain
-  if (currentHost !== "app") {
+  if (currentHost !== "app" && currentHost !== hostname) {
     return NextResponse.rewrite(
       new URL(`/sites/${currentHost}${path}`, req.url)
     );

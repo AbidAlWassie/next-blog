@@ -1,24 +1,24 @@
-import type React from "react"
-import { notFound } from "next/navigation"
-import { prisma } from "@/lib/prisma"
+import type React from "react";
+import { notFound } from "next/navigation";
+import { prisma } from "@/lib/prisma";
 
 export default async function SiteLayout({
   children,
   params,
 }: {
-  children: React.ReactNode
-  params: { site: string }
+  children: React.ReactNode;
+  params: { site: string };
 }) {
-  const site = await prisma.site.findUnique({
+  const { site } = await params; // Await params here
+  const siteData = await prisma.site.findUnique({
     where: {
-      subdomain: params.site,
+      subdomain: site,
     },
-  })
+  });
 
-  if (!site) {
-    notFound()
+  if (!siteData) {
+    notFound();
   }
-
   return (
     <div className="min-h-screen flex flex-col">
       <header className="border-b">
@@ -26,7 +26,7 @@ export default async function SiteLayout({
           <div className="flex justify-between items-center">
             <div>
               <a href="/" className="text-2xl font-bold">
-                {site.name}
+                {siteData.name}
               </a>
             </div>
           </div>
@@ -51,6 +51,5 @@ export default async function SiteLayout({
         </div>
       </footer>
     </div>
-  )
+  );
 }
-

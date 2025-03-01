@@ -45,16 +45,17 @@ export default async function DashboardPage() {
                   <p>
                     Subdomain:{" "}
                     <span className="font-medium">
-                      {site.subdomain}.{process.env.BASE_DOMAIN}
+                      {site.subdomain}.{process.env.BASE_DOMAIN}:
+                      {process.env.PORT}
                     </span>
                   </p>
                 </div>
                 <div className="mt-6 flex space-x-3">
-                  <Link href={`/app/site/${site.id}`} className="">
+                  <Link href={`/admin/site/${site.id}`} className="">
                     Manage
                   </Link>
                   <Link
-                    href={`${process.env.PROTOCOL}${site.subdomain}.${process.env.BASE_DOMAIN}`}
+                    href={`${process.env.PROTOCOL}${site.subdomain}.${process.env.BASE_DOMAIN}:${process.env.PORT}`}
                     className=""
                     target="_blank"
                   >
