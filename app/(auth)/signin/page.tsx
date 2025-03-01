@@ -42,7 +42,7 @@ export default function SignInPage() {
 
   const handleSignUpSuccess = () => {
     toast.success(
-      "Account created! Please check your email to verify your account.",
+      "Account created! Please check your email to verify your account."
     );
     router.push("/verify-request");
   };
