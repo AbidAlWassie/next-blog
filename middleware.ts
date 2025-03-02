@@ -1,4 +1,3 @@
-// middleware.ts
 import { type NextRequest, NextResponse } from "next/server";
 
 export const config = {
@@ -21,24 +20,42 @@ export default async function middleware(req: NextRequest) {
   const hostname = req.headers.get("host") || "";
   const path = url.pathname;
 
-  // Define which hostnames are considered "main app" hostnames
-  // and which are considered site hostnames
+  // For debugging in production
+  console.log({
+    hostname,
+    path,
+    baseDomain: process.env.BASE_DOMAIN,
+    env: process.env.NODE_ENV,
+  });
+
+  // Check if we're on the main domain
+  const isMainDomain =
+    hostname === "frostcore.tech" ||
+    hostname === process.env.BASE_DOMAIN ||
+    hostname === "localhost:3000" ||
+    hostname === "www.frostcore.tech";
+
+  // Handle main domain routes
+  if (isMainDomain) {
+    // Root path
+    if (path === "/" || path === "") {
+      return NextResponse.rewrite(new URL("/home", req.url));
+    }
+
+    // Dashboard path
+    if (path === "/dashboard") {
+      return NextResponse.rewrite(new URL("/admin/dashboard", req.url));
+    }
+
+    // All other paths on main domain
+    return NextResponse.rewrite(new URL(path, req.url));
+  }
+
+  // Handle subdomains
   const currentHost =
     process.env.NODE_ENV === "production"
-      ? hostname.replace(`.${process.env.BASE_DOMAIN}`, "")
-      : hostname.replace(`.${process.env.BASE_DOMAIN}`, "");
-
-  // Special case for localhost development and production
-  if (hostname === process.env.BASE_DOMAIN || hostname === "frostcore.tech") {
-    // Rewrite root path to /home
-    if (path === "/") {
-      return NextResponse.rewrite(new URL(`/home`, req.url));
-    } else if (path === "/dashboard") {
-      // if path is /dashboard, return response /admin/dashboard
-      return NextResponse.rewrite(new URL(`/admin/dashboard`, req.url));
-    }
-    return NextResponse.rewrite(new URL(`${path}`, req.url));
-  }
+      ? hostname.replace(`.frostcore.tech`, "")
+      : hostname.replace(`.localhost:3000`, "");
 
   // Rewrite for site subdomain
   if (currentHost !== "app" && currentHost !== hostname) {
