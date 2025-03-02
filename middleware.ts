@@ -15,34 +15,41 @@ export const config = {
   ],
 };
 
-export default function middleware(req: NextRequest) {
-  // Clone the nextUrl to create an absolute URL we can modify
-  const url = req.nextUrl.clone();
+export default async function middleware(req: NextRequest) {
+  const url = req.nextUrl;
   const hostname = req.headers.get("host") || "";
-  const path = req.nextUrl.pathname;
+  const path = url.pathname;
 
-  // Extract currentHost by stripping the base domain from hostname
-  const currentHost = hostname.replace(`.${process.env.BASE_DOMAIN}`, "");
+  // Define which hostnames are considered "main app" hostnames
+  // and which are considered site hostnames
+  const currentHost =
+    process.env.NODE_ENV === "production"
+      ? hostname.replace(`.${process.env.BASE_DOMAIN}`, "")
+      : hostname.replace(`.localhost:3000`, "");
 
-  // Special case for main domain (both development and production)
-  if (hostname === "frostcore.tech" || hostname === process.env.BASE_DOMAIN) {
+  // Special case for development and production
+  if (
+    hostname === "frostcore.tech" ||
+    hostname === process.env.BASE_DOMAIN ||
+    hostname === "localhost:3000"
+  ) {
+    // Rewrite root path to /home
     if (path === "/") {
-      url.pathname = "/home";
-      return NextResponse.rewrite(url);
+      return NextResponse.rewrite(new URL(`/home`, req.url));
     } else if (path === "/dashboard") {
-      url.pathname = "/admin/dashboard";
-      return NextResponse.rewrite(url);
+      // Rewrite /dashboard to /admin/dashboard while keeping the original URL
+      return NextResponse.rewrite(new URL(`/admin/dashboard`, req.url));
     }
-    // For any other path, rewrite using the same URL
-    return NextResponse.rewrite(url);
+    return NextResponse.rewrite(new URL(`${path}`, req.url));
   }
 
-  // Rewrite for site subdomain if it's not "app" and not the main hostname
+  // Rewrite for site subdomain
   if (currentHost !== "app" && currentHost !== hostname) {
-    url.pathname = `/site/${currentHost}${path}`;
-    return NextResponse.rewrite(url);
+    return NextResponse.rewrite(
+      new URL(`/site/${currentHost}${path}`, req.url)
+    );
   }
 
-  // If none of the conditions are met, proceed as normal
+  // If none of the conditions are met, just return the request as is
   return NextResponse.next();
 }
