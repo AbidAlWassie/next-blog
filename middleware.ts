@@ -1,3 +1,4 @@
+// middleware.ts
 import { type NextRequest, NextResponse } from "next/server";
 
 export const config = {
@@ -25,10 +26,7 @@ export default async function middleware(req: NextRequest) {
   const currentHost =
     process.env.NODE_ENV === "production"
       ? hostname.replace(`.${process.env.BASE_DOMAIN}`, "")
-      : hostname.replace(
-          `.${process.env.BASE_DOMAIN}:${process.env.PORT || 3000}`,
-          ""
-        );
+      : hostname.replace(`.${process.env.BASE_DOMAIN}`, "");
 
   // Special case for localhost development
   if (hostname === "localhost:3000" || hostname === process.env.BASE_DOMAIN) {

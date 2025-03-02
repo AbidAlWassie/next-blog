@@ -1,3 +1,4 @@
+// app\admin\dashboard\page.tsx
 import { auth } from "@/app/(auth)/auth";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
@@ -45,8 +46,7 @@ export default async function DashboardPage() {
                   <p>
                     Subdomain:{" "}
                     <span className="font-medium">
-                      {site.subdomain}.{process.env.BASE_DOMAIN}:
-                      {process.env.PORT}
+                      {site.subdomain}.{process.env.BASE_DOMAIN}
                     </span>
                   </p>
                 </div>
@@ -55,7 +55,7 @@ export default async function DashboardPage() {
                     Manage
                   </Link>
                   <Link
-                    href={`${process.env.PROTOCOL}${site.subdomain}.${process.env.BASE_DOMAIN}:${process.env.PORT}`}
+                    href={`${process.env.PROTOCOL}${site.subdomain}.${process.env.BASE_DOMAIN}`}
                     className=""
                     target="_blank"
                   >

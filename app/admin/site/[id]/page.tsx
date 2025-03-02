@@ -1,3 +1,4 @@
+// app\admin\site\[id]\page.tsx
 import { auth } from "@/app/(auth)/auth";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
@@ -43,12 +44,12 @@ export default async function SitePage({ params }: PageProps) {
           <h1 className="text-3xl font-bold">{site.name}</h1>
           <p className="mt-1">
             <Link
-              href={`${process.env.PROTOCOL}${site.subdomain}.${process.env.BASE_DOMAIN}:${process.env.PORT}`}
+              href={`${process.env.PROTOCOL}${site.subdomain}.${process.env.BASE_DOMAIN}`}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:underline"
             >
-              {site.subdomain}.{process.env.BASE_DOMAIN}:{process.env.PORT}
+              {site.subdomain}.{process.env.BASE_DOMAIN}
             </Link>
           </p>
         </div>
