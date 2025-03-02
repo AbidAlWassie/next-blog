@@ -32,13 +32,20 @@ export default async function middleware(req: NextRequest) {
 
   // Special case for localhost development
   if (hostname === "localhost:3000" || hostname === process.env.BASE_DOMAIN) {
+    // Rewrite root path to /home
+    if (path === "/") {
+      return NextResponse.rewrite(new URL(`/home`, req.url));
+    } else if (path === "/dashboard") {
+      // if path is /dashboard, return response /admin/dashboard
+      return NextResponse.rewrite(new URL(`/admin/dashboard`, req.url));
+    }
     return NextResponse.rewrite(new URL(`${path}`, req.url));
   }
 
   // Rewrite for site subdomain
   if (currentHost !== "app" && currentHost !== hostname) {
     return NextResponse.rewrite(
-      new URL(`/sites/${currentHost}${path}`, req.url)
+      new URL(`/site/${currentHost}${path}`, req.url)
     );
   }
 

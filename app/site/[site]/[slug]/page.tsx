@@ -1,14 +1,20 @@
-import { notFound } from "next/navigation"
-import { prisma } from "@/lib/prisma"
-import Link from "next/link"
+import { prisma } from "@/lib/prisma";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
-export default async function PostPage({ params }: { params: { site: string; slug: string } }) {
-  const post = await prisma.post.findUnique({
+export default async function PostPage({
+  params,
+}: {
+  params: { site: string; slug: string };
+}) {
+  const { site, slug } = await params;
+
+  const post = await prisma.post.findFirst({
     where: {
-      id: params.slug,
+      slug: slug,
       published: true,
       site: {
-        subdomain: params.site,
+        subdomain: site,
       },
     },
     include: {
@@ -23,15 +29,18 @@ export default async function PostPage({ params }: { params: { site: string; slu
         },
       },
     },
-  })
+  });
 
   if (!post) {
-    notFound()
+    notFound();
   }
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Link href="/" className="text-blue-600 hover:underline mb-8 inline-block">
+      <Link
+        href="/"
+        className="text-blue-600 hover:underline mb-8 inline-block"
+      >
         ← Back to {post.site.name}
       </Link>
 
@@ -47,8 +56,8 @@ export default async function PostPage({ params }: { params: { site: string; slu
             />
           )}
           <div>
-            <div className="text-gray-900 font-medium">{post.site.user.name}</div>
-            <div className="text-gray-500">
+            <div className=" font-medium">{post.site.user.name}</div>
+            <div className="">
               {new Date(post.createdAt).toLocaleDateString("en-US", {
                 month: "long",
                 day: "numeric",
@@ -61,6 +70,5 @@ export default async function PostPage({ params }: { params: { site: string; slu
         <div className="mt-8 whitespace-pre-wrap">{post.content}</div>
       </article>
     </div>
-  )
+  );
 }
-

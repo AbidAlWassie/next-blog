@@ -1,6 +1,6 @@
-import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 export default async function SitePage({
   params,
@@ -39,7 +39,7 @@ export default async function SitePage({
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold">{siteData.name}</h1>
         {siteData.description && (
-          <p className="mt-4 text-xl text-gray-600">{siteData.description}</p>
+          <p className="mt-4 text-xl ">{siteData.description}</p>
         )}
         <div className="mt-6 flex items-center justify-center">
           {siteData.user?.image && (
@@ -49,7 +49,7 @@ export default async function SitePage({
               className="w-10 h-10 rounded-full"
             />
           )}
-          <p className="ml-4 text-gray-600">By {siteData.user?.name}</p>
+          <p className="ml-4 ">By {siteData.user?.name}</p>
         </div>
       </div>
 
@@ -60,7 +60,7 @@ export default async function SitePage({
               <h2 className="text-2xl font-bold">{post.title}</h2>
               <p className="mt-2">{post.content}</p>
               <Link
-                href={`/sites/${site}/${post.id}`}
+                href={`/${post.slug}`}
                 className="text-blue-600 hover:underline"
               >
                 Read more →
@@ -68,7 +68,7 @@ export default async function SitePage({
             </article>
           ))
         ) : (
-          <p className="text-center text-gray-600">No posts yet.</p>
+          <p className="text-center">No posts yet.</p>
         )}
       </div>
     </div>

@@ -16,7 +16,7 @@ export default function Footer() {
           </Link>
           .
         </p>
-        <p>© 2024 Notesap. All rights reserved.</p>
+        <p>© 2025 Next Blog. All rights reserved.</p>
       </div>
     </CardFooter>
   );

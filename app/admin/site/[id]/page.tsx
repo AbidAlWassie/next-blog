@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import CreatePostButton from "./create-post-button";
+import CreatePostButton from "./CreatePostBtn";
+import { EditDeleteButtons } from "./EditDeleteBtn";
 
 export default async function SitePage({ params }: { params: { id: string } }) {
   const session = await auth();
@@ -35,7 +36,7 @@ export default async function SitePage({ params }: { params: { id: string } }) {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold">{site.name}</h1>
-          <p className="text-gray-500 mt-1">
+          <p className=" mt-1">
             <a
               href={`${process.env.PROTOCOL}${site.subdomain}.${process.env.BASE_DOMAIN}:${process.env.PORT}`}
               target="_blank"
@@ -47,7 +48,7 @@ export default async function SitePage({ params }: { params: { id: string } }) {
           </p>
         </div>
         <div className="flex space-x-4">
-          <Link href="/admin/dashboard">
+          <Link href="/dashboard">
             <Button variant="outline">Back to Dashboard</Button>
           </Link>
           <CreatePostButton siteId={site.id} />
@@ -73,22 +74,7 @@ export default async function SitePage({ params }: { params: { id: string } }) {
                       {new Date(post.createdAt).toLocaleDateString()}
                     </p>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <span
-                      className={`px-2 py-1 text-xs rounded-full ${
-                        post.published
-                          ? "bg-green-100 text-green-800"
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}
-                    >
-                      {post.published ? "Published" : "Draft"}
-                    </span>
-                    <Link href={`/admin/post/${post.id}`}>
-                      <Button variant="outline" size="sm">
-                        Edit
-                      </Button>
-                    </Link>
-                  </div>
+                  <EditDeleteButtons postId={post.id} postSlug={post.slug} />
                 </div>
               </div>
             ))}

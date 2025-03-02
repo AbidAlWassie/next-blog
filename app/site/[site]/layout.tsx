@@ -1,6 +1,6 @@
-import type React from "react";
-import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { notFound } from "next/navigation";
+import type React from "react";
 
 export default async function SiteLayout({
   children,
@@ -9,7 +9,7 @@ export default async function SiteLayout({
   children: React.ReactNode;
   params: { site: string };
 }) {
-  const { site } = await params; // Await params here
+  const { site } = await params;
   const siteData = await prisma.site.findUnique({
     where: {
       subdomain: site,
@@ -37,14 +37,27 @@ export default async function SiteLayout({
 
       <footer className="border-t py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center text-gray-500">
+          <div className="text-center ">
             <p>
-              © {new Date().getFullYear()} {site.name}. All rights reserved.
+              © {new Date().getFullYear()} {siteData.name}. All rights reserved.
             </p>
             <p className="mt-2">
               Powered by{" "}
-              <a href="/" className="text-blue-600 hover:underline">
-                Multi-Tenant Blog
+              <a
+                href={process.env.NEXTAUTH_URL}
+                className="text-blue-600 hover:underline"
+              >
+                Next Blog
+              </a>
+            </p>
+            <p className="mt-2">
+              Developed by{" "}
+              <a
+                href="https://github.com/AbidAlWassie"
+                className="text-blue-600 hover:underline"
+                target="_blank"
+              >
+                Abid Al Wassie
               </a>
             </p>
           </div>
