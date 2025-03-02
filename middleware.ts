@@ -29,7 +29,7 @@ export default async function middleware(req: NextRequest) {
       : hostname.replace(`.${process.env.BASE_DOMAIN}`, "");
 
   // Special case for localhost development
-  if (hostname === "localhost:3000" || hostname === process.env.BASE_DOMAIN) {
+  if (hostname === process.env.BASE_DOMAIN) {
     // Rewrite root path to /home
     if (path === "/") {
       return NextResponse.rewrite(new URL(`/home`, req.url));
