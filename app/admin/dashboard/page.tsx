@@ -29,7 +29,9 @@ export default async function DashboardPage() {
 
       {sites.length === 0 ? (
         <div className="text-center py-12 rounded-lg">
-          <h2 className="text-xl font-medium ">You don't have any sites yet</h2>
+          <h2 className="text-xl font-medium ">
+            You don&apos;t have any sites yet
+          </h2>
           <p className="mt-2 ">Get started by creating a new site.</p>
         </div>
       ) : (

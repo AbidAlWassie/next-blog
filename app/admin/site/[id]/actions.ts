@@ -206,7 +206,8 @@ export async function deletePost(postId: string) {
   } catch (error) {
     return {
       success: false,
-      message: "Something went wrong",
+      message:
+        error instanceof Error ? error.message : "An unknown error occurred",
     };
   }
 }

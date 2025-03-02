@@ -1,13 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { editPost } from "../../site/[id]/actions";
 
-export function EditPostForm({ post }: { post: any }) {
+type Post = {
+  id: string;
+  title: string;
+  content: string;
+  siteId: string;
+};
+
+export function EditPostForm({ post }: { post: Post }) {
   const [title, setTitle] = useState(post.title);
   const [content, setContent] = useState(post.content);
   const [isLoading, setIsLoading] = useState(false);

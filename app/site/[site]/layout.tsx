@@ -1,15 +1,15 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
-import type React from "react";
+import type { ReactNode } from "react";
 
-export default async function SiteLayout({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: { site: string };
-}) {
+interface LayoutProps {
+  children: ReactNode;
+  params: Promise<{ site: string }>;
+}
+
+export default async function SiteLayout({ children, params }: LayoutProps) {
   const { site } = await params;
+
   const siteData = await prisma.site.findUnique({
     where: {
       subdomain: site,
@@ -19,6 +19,7 @@ export default async function SiteLayout({
   if (!siteData) {
     notFound();
   }
+
   return (
     <div className="min-h-screen flex flex-col">
       <header className="border-b">

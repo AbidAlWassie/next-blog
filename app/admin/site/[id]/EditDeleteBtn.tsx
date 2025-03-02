@@ -4,13 +4,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { deletePost } from "./actions";
 
-export function EditDeleteButtons({
-  postId,
-  postSlug,
-}: {
-  postId: string;
-  postSlug: string;
-}) {
+export function EditDeleteButtons({ postId }: { postId: string }) {
   const handleDelete = async () => {
     const response = await deletePost(postId);
     if (response.success) {

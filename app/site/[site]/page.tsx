@@ -1,13 +1,14 @@
 import { prisma } from "@/lib/prisma";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export default async function SitePage({
-  params,
-}: {
-  params: { site: string };
-}) {
-  const { site } = await params; // Await params here
+interface PageProps {
+  params: Promise<{ site: string }>;
+}
+
+export default async function SitePage({ params }: PageProps) {
+  const { site } = await params;
   const siteData = await prisma.site.findUnique({
     where: {
       subdomain: site,
@@ -43,7 +44,9 @@ export default async function SitePage({
         )}
         <div className="mt-6 flex items-center justify-center">
           {siteData.user?.image && (
-            <img
+            <Image
+              width={40}
+              height={40}
               src={siteData.user.image || "/placeholder.svg"}
               alt={siteData.user.name || "Author"}
               className="w-10 h-10 rounded-full"
