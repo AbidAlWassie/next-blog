@@ -1,9 +1,5 @@
 @import "tailwindcss";
-
-@theme {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
   :root {
@@ -60,17 +56,138 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
-}
-
-@layer base {
-  * {
-    border-color: hsl(var(--border));
-  }
 
   body {
-    color: hsl(var(--foreground));
     background-color: hsl(var(--background));
-    font-feature-settings: "rlig" 1, "calt" 1;
+    color: hsl(var(--foreground));
   }
 }
 
+@layer utilities {
+  /* ✅ Background & Text Colors */
+  .bg-background {
+    background-color: hsl(var(--background));
+  }
+  .text-foreground {
+    color: hsl(var(--foreground));
+  }
+
+  /* ✅ Cards */
+  .bg-card {
+    background-color: hsl(var(--card));
+  }
+  .text-card-foreground {
+    color: hsl(var(--card-foreground));
+  }
+
+  /* ✅ Popovers */
+  .bg-popover {
+    background-color: hsl(var(--popover));
+  }
+  .text-popover-foreground {
+    color: hsl(var(--popover-foreground));
+  }
+
+  /* ✅ Primary */
+  .bg-primary {
+    background-color: hsl(var(--primary));
+  }
+  .text-primary-foreground {
+    color: hsl(var(--primary-foreground));
+  }
+
+  /* ✅ Secondary */
+  .bg-secondary {
+    background-color: hsl(var(--secondary));
+  }
+  .text-secondary-foreground {
+    color: hsl(var(--secondary-foreground));
+  }
+
+  /* ✅ Muted */
+  .bg-muted {
+    background-color: hsl(var(--muted));
+  }
+  .text-muted-foreground {
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* ✅ Accent */
+  .bg-accent {
+    background-color: hsl(var(--accent));
+  }
+  .text-accent-foreground {
+    color: hsl(var(--accent-foreground));
+  }
+
+  /* ✅ Destructive (Danger/Error) */
+  .bg-destructive {
+    background-color: hsl(var(--destructive));
+  }
+  .text-destructive-foreground {
+    color: hsl(var(--destructive-foreground));
+  }
+
+  /* ✅ Borders */
+  .border {
+    border-color: hsl(var(--border));
+  }
+  .border-t {
+    border-top-color: hsl(var(--border));
+  }
+  .border-b {
+    border-bottom-color: hsl(var(--border));
+  }
+  .border-l {
+    border-left-color: hsl(var(--border));
+  }
+  .border-r {
+    border-right-color: hsl(var(--border));
+  }
+
+  /* ✅ Input Borders */
+  .border-input {
+    border-color: hsl(var(--input));
+  }
+
+  /* ✅ Focus Ring */
+  .ring {
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.5);
+  }
+
+  /* ✅ Radius */
+  .rounded {
+    border-radius: var(--radius);
+  }
+  .rounded-md {
+    border-radius: calc(var(--radius) * 0.75);
+  }
+  .rounded-lg {
+    border-radius: calc(var(--radius) * 1.25);
+  }
+  .rounded-xl {
+    border-radius: calc(var(--radius) * 1.5);
+  }
+
+  /* ✅ Charts */
+  .bg-chart-1 {
+    background-color: hsl(var(--chart-1));
+  }
+  .bg-chart-2 {
+    background-color: hsl(var(--chart-2));
+  }
+  .bg-chart-3 {
+    background-color: hsl(var(--chart-3));
+  }
+  .bg-chart-4 {
+    background-color: hsl(var(--chart-4));
+  }
+  .bg-chart-5 {
+    background-color: hsl(var(--chart-5));
+  }
+
+  /* ✅ Cursor */
+  button {
+    cursor: pointer;
+  }
+}

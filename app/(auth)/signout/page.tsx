@@ -37,6 +37,7 @@ export default function SignOutPage() {
           <Button
             onClick={handleSignOut}
             disabled={isSigningOut}
+            variant="destructive"
             className="w-full"
           >
             {isSigningOut ? (

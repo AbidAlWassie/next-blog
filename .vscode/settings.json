@@ -1,0 +1,51 @@
+{
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.next": true,
+    "**/node_modules": true
+  },
+  "material-icon-theme.folders.associations": {
+    "actions": "queue",
+    "refs": "constant",
+    "post/[id]": "docs",
+    "site/[id]": "public",
+    "site/[site]": "public",
+    "(auth)": "secure",
+    "dashboard": "content"
+  },
+  "material-icon-theme.saturation": 0.9,
+  // "material-icon-theme.folders.color": "#ef5350",
+  // "material-icon-theme.files.color": "#42a5f5",
+  // "material-icon-theme.files.associations": {
+  //   "*.ts": "typescript",
+  //   "**.json": "json",
+  //   "fileName.ts": "angular"
+  // }
+  "material-icon-theme.folders.customClones": [
+    {
+      "name": "admin",
+      "base": "admin",
+      "color": "#ff3700",
+      "lightColor": "light-green-700",
+      "folderNames": ["users"],
+      "rootFolderNames": ["users"]
+    },
+    {
+      "name": "users-admin",
+      "base": "admin",
+      "color": "light-green-500",
+      "lightColor": "light-green-700",
+      "folderNames": ["users"],
+      "rootFolderNames": ["users"]
+    },
+    {
+      "name": "roles-admin",
+      "base": "admin",
+      "color": "purple-400",
+      "folderNames": ["roles"],
+      "rootFolderNames": ["users"]
+    }
+  ]
+}

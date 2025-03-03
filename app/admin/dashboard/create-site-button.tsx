@@ -42,9 +42,11 @@ export default function CreateSiteButton() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Create New Site</Button>
+        <Button className="bg-blue-500 text-white dark:bg-blue-800 dark:hover:bg-blue-700">
+          Create New Site
+        </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] bg-background">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Create a new site</DialogTitle>
