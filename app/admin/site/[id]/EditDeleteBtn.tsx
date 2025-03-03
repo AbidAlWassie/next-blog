@@ -1,27 +1,21 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { deletePost } from "./actions";
+import { Button } from "@/components/ui/button"
+import { Pencil } from "lucide-react"
+import Link from "next/link"
+import { DeleteConfirmation } from "./DeleteConfirmation"
 
 export function EditDeleteButtons({ postId }: { postId: string }) {
-  const handleDelete = async () => {
-    const response = await deletePost(postId);
-    if (response.success) {
-      window.location.reload();
-    }
-  };
-
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex space-x-2">
       <Link href={`/admin/post/${postId}`}>
         <Button variant="outline" size="sm">
+          <Pencil className="h-4 w-4 mr-2" />
           Edit
         </Button>
       </Link>
-      <Button variant="outline" size="sm" onClick={handleDelete}>
-        Delete
-      </Button>
+      <DeleteConfirmation id={postId} type="post" />
     </div>
-  );
+  )
 }
+

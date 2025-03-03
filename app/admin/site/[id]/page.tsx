@@ -1,9 +1,12 @@
+// app\admin\site\[id]\page.tsx
 import { auth } from "@/app/(auth)/auth";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
+import { ArrowBigLeft, Settings } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import CreatePostButton from "./CreatePostBtn";
+import { Dropdown } from "./Dropdown";
 import { EditDeleteButtons } from "./EditDeleteBtn";
 import { EditSiteForm } from "./EditSiteForm";
 
@@ -14,7 +17,13 @@ interface Site {
   description?: string;
 }
 
-export default async function SitePage({ params }: { params: { id: string } }) {
+interface PageParams {
+  params: Promise<{
+    id: string;
+  }>;
+}
+
+export default async function SitePage({ params }: PageParams) {
   const session = await auth();
 
   if (!session?.user) {
@@ -23,7 +32,7 @@ export default async function SitePage({ params }: { params: { id: string } }) {
 
   const site = await prisma.site.findUnique({
     where: {
-      id: params.id,
+      id: (await params).id,
       userId: session.user.id,
     },
     include: {
@@ -41,9 +50,10 @@ export default async function SitePage({ params }: { params: { id: string } }) {
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex justify-between">
         <div>
           <h1 className="text-3xl font-bold">{site.name}</h1>
+
           <p className="mt-1">
             <Link
               href={`${process.env.PROTOCOL}${site.subdomain}.${process.env.BASE_DOMAIN}`}
@@ -55,22 +65,37 @@ export default async function SitePage({ params }: { params: { id: string } }) {
             </Link>
           </p>
         </div>
-        <div className="flex space-x-4">
-          <Link href="/dashboard">
-            <Button variant="outline">Back to Dashboard</Button>
-          </Link>
-          <CreatePostButton siteId={site.id} />
+
+        <div className="flex justify-between items-center mb-8">
+          <div className="flex flex-col">
+            <div className="SiteActions">
+              <Dropdown
+                trigger={
+                  <Button variant="outline" className="bg-secondary">
+                    <Settings />
+                    Edit Site
+                  </Button>
+                }
+              >
+                <EditSiteForm site={site as Site} />
+              </Dropdown>
+            </div>
+
+            <Link href="/dashboard">
+              <Button variant="outline">
+                <ArrowBigLeft />
+                Back to Dashboard
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
 
       <div className="mt-8">
-        <h2 className="text-xl font-semibold mb-4">Edit Site</h2>
-        <EditSiteForm site={site as Site} />
-      </div>
-
-      <div className="mt-8">
-        <h2 className="text-xl font-semibold mb-4">Posts</h2>
-
+        <div className="flex justify-between mb-4">
+          <h2 className="text-xl font-semibold mb-4">Posts</h2>
+          <CreatePostButton siteId={site.id} />
+        </div>
         {site.posts.length === 0 ? (
           <div className="text-center py-12 rounded-lg">
             <h3 className="text-lg font-medium">No posts yet</h3>

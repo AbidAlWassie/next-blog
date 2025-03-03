@@ -66,7 +66,7 @@ export function EditPostForm({ post }: { post: Post }) {
         </div>
       </div>
       <div className="flex justify-end">
-        <Button type="submit" disabled={isLoading}>
+        <Button className="colored" type="submit" disabled={isLoading}>
           {isLoading ? "Saving..." : "Save Changes"}
         </Button>
       </div>

@@ -162,7 +162,7 @@ export async function editPost(formData: FormData) {
   }
 }
 
-export async function deletePost(postId: string) {
+export async function deletePost(formData: FormData) {
   const session = await auth();
 
   if (!session?.user) {
@@ -171,6 +171,8 @@ export async function deletePost(postId: string) {
       message: "Not authenticated",
     };
   }
+
+  const postId = formData.get("postId") as string;
 
   try {
     // Verify that the post belongs to the user
@@ -204,10 +206,10 @@ export async function deletePost(postId: string) {
       message: "Post deleted successfully",
     };
   } catch (error) {
+    console.error("Error deleting post:", error);
     return {
       success: false,
-      message:
-        error instanceof Error ? error.message : "An unknown error occurred",
+      message: "Something went wrong",
     };
   }
 }
@@ -338,5 +340,55 @@ export async function editSite(formData: FormData) {
       success: false,
       message: "Something went wrong",
     };
+  }
+}
+
+export async function deleteSite(formData: FormData) {
+  const session = await auth()
+
+  if (!session?.user) {
+    return {
+      success: false,
+      message: "Not authenticated",
+    }
+  }
+
+  const siteId = formData.get("siteId") as string
+
+  try {
+    // Verify that the site belongs to the user
+    const site = await prisma.site.findUnique({
+      where: {
+        id: siteId,
+        userId: session.user.id,
+      },
+    })
+
+    if (!site) {
+      return {
+        success: false,
+        message: "Site not found or you do not have permission",
+      }
+    }
+
+    // Delete the site (this will cascade delete all posts)
+    await prisma.site.delete({
+      where: {
+        id: siteId,
+      },
+    })
+
+    revalidatePath(`/admin/dashboard`)
+
+    return {
+      success: true,
+      message: "Site deleted successfully",
+    }
+  } catch (error) {
+    console.error("Error deleting site:", error)
+    return {
+      success: false,
+      message: "Something went wrong",
+    }
   }
 }

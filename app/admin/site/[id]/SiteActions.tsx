@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { deletePost } from "./actions";
 
-import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -17,12 +16,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { createPost } from "./actions";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { createPost } from "./actions";
 
 export function EditDeleteButtons({ postId }: { postId: string }) {
   const handleDelete = async () => {
-    const response = await deletePost(postId);
+    const formData = new FormData();
+    formData.append("postId", postId);
+    const response = await deletePost(formData);
     if (response.success) {
       // Refresh the page or handle the UI update
       window.location.reload();
@@ -68,7 +70,7 @@ export default function CreatePostButton({ siteId }: { siteId: string }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Create New Post</Button>
+        <Button className="colored">Create New Post</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>

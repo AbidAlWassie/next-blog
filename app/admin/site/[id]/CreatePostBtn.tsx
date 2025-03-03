@@ -1,18 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
+  DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { SquarePen } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { createPost } from "./actions";
 
 export default function CreatePostButton({ siteId }: { siteId: string }) {
@@ -36,7 +37,9 @@ export default function CreatePostButton({ siteId }: { siteId: string }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Create New Post</Button>
+        <Button className="colored">
+          <SquarePen /> Create Post
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>

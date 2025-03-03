@@ -1,3 +1,4 @@
+// app\admin\site\[id]\Dropdown.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -37,7 +38,7 @@ export function EditSiteForm({ site }: { site: Site }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="p-4">
       <div className="grid gap-4 py-4">
         <div className="grid grid-cols-4 items-center gap-4">
           <label htmlFor="name" className="text-right">
@@ -80,7 +81,7 @@ export function EditSiteForm({ site }: { site: Site }) {
         </div>
       </div>
       <div className="flex justify-end">
-        <Button type="submit" disabled={isLoading}>
+        <Button className="colored" type="submit" disabled={isLoading}>
           {isLoading ? "Saving..." : "Save Changes"}
         </Button>
       </div>
