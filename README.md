@@ -11,7 +11,7 @@ A modern, full-stack blogging platform built with **Next.js**, **Prisma**, **Pos
 [<img src="https://img.shields.io/badge/Prisma-6.4-2D3748?style=flat&logo=prisma&logoColor=white&labelColor=2D3748&color=2D3748&borderRadius=20" height="30" />](https://www.prisma.io/)
 [<img src="https://img.shields.io/badge/Tailwind%20CSS-3.0-38B2AC?style=flat&logo=tailwind-css&logoColor=white&labelColor=38B2AC&color=38B2AC&borderRadius=20" alt="TailwindCSS" height="30" />](https://tailwindcss.com/)
 [<img src="https://img.shields.io/badge/PostgreSQL-15-316192?style=flat&logo=postgresql&logoColor=white&labelColor=316192&color=316192&borderRadius=20" height=30>](https://www.postgresql.org/)
-[<img src="https://img.shields.io/badge/NextAuth%20V5.0-000000?style=flat&logo=next.js&logoColor=white&labelColor=000000&color=000000&borderRadius=20" height=30>](https://next-auth.js.org/)
+[<img src="https://github.com/vquix/svg-badges/blob/main/NextAuth%20V5.0-081b26.svg" height=30>](https://next-auth.js.org/)
 
 ---
 
