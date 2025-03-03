@@ -211,3 +211,132 @@ export async function deletePost(postId: string) {
     };
   }
 }
+
+// export async function publishPost(postId: string) {
+//   const session = await auth();
+
+//   if (!session?.user) {
+//     return {
+//       success: false,
+//       message: "Not authenticated",
+//     };
+//   }
+
+//   try {
+//     // Verify that the post belongs to the user
+//     const post = await prisma.post.findUnique({
+//       where: {
+//         id: postId,
+//       },
+//       include: {
+//         site: true,
+//       },
+//     });
+
+//     if (!post || post.site.userId !== session.user.id) {
+//       return {
+//         success: false,
+//         message: "Post not found or you do not have permission",
+//       };
+//     }
+
+//     // Publish the post
+//     await prisma.post.update({
+//       where: {
+//         id: postId,
+//       },
+//       data: {
+//         published: true,
+//       },
+//     });
+
+//     revalidatePath(`/admin/site/${post.siteId}`);
+
+//     return {
+//       success: true,
+//       message: "Post published successfully",
+//     };
+//   } catch (error) {
+//     return {
+//       success: false,
+//       message:
+//         error instanceof Error ? error.message : "An unknown error occurred",
+//     };
+//   }
+// }
+
+export async function editSite(formData: FormData) {
+  const session = await auth();
+
+  if (!session?.user) {
+    return {
+      success: false,
+      message: "Not authenticated",
+    };
+  }
+
+  const SiteSchema = z.object({
+    name: z.string().min(1).max(100),
+    description: z.string().optional(),
+    subdomain: z.string().min(1).max(100),
+  });
+
+  const siteId = formData.get("siteId") as string;
+  const name = formData.get("name") as string;
+  const description = formData.get("description") as string;
+  const subdomain = formData.get("subdomain") as string;
+
+  try {
+    const validatedFields = SiteSchema.parse({
+      name,
+      description,
+      subdomain,
+    });
+
+    // Verify that the site belongs to the user
+    const site = await prisma.site.findUnique({
+      where: {
+        id: siteId,
+        userId: session.user.id,
+      },
+    });
+
+    if (!site) {
+      return {
+        success: false,
+        message: "Site not found or you do not have permission",
+      };
+    }
+
+    // Update the site
+    await prisma.site.update({
+      where: {
+        id: siteId,
+      },
+      data: {
+        name: validatedFields.name,
+        description: validatedFields.description,
+        subdomain: validatedFields.subdomain,
+      },
+    });
+
+    revalidatePath(`/admin/site/${siteId}`);
+
+    return {
+      success: true,
+      message: "Site updated successfully",
+    };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return {
+        success: false,
+        message: error.errors[0].message,
+      };
+    }
+
+    return {
+      success: false,
+      message: "Something went wrong",
+    };
+  }
+}

@@ -1,4 +1,3 @@
-// app\admin\site\[id]\page.tsx
 import { auth } from "@/app/(auth)/auth";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
@@ -6,13 +5,16 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import CreatePostButton from "./CreatePostBtn";
 import { EditDeleteButtons } from "./EditDeleteBtn";
+import { EditSiteForm } from "./EditSiteForm";
 
-interface PageProps {
-  params: Promise<{ id: string }>;
+interface Site {
+  id: string;
+  name: string;
+  subdomain: string;
+  description?: string;
 }
 
-export default async function SitePage({ params }: PageProps) {
-  const { id } = await params;
+export default async function SitePage({ params }: { params: { id: string } }) {
   const session = await auth();
 
   if (!session?.user) {
@@ -21,7 +23,7 @@ export default async function SitePage({ params }: PageProps) {
 
   const site = await prisma.site.findUnique({
     where: {
-      id: id,
+      id: params.id,
       userId: session.user.id,
     },
     include: {
@@ -59,6 +61,11 @@ export default async function SitePage({ params }: PageProps) {
           </Link>
           <CreatePostButton siteId={site.id} />
         </div>
+      </div>
+
+      <div className="mt-8">
+        <h2 className="text-xl font-semibold mb-4">Edit Site</h2>
+        <EditSiteForm site={site as Site} />
       </div>
 
       <div className="mt-8">
