@@ -56,7 +56,7 @@ export function SignInForm({
             required
           />
         </div>
-        <Button type="submit" className="w-full" disabled={isLoading}>
+        <Button type="submit" className="signinBtn w-full" disabled={isLoading}>
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -83,6 +83,7 @@ export function SignInForm({
         <Button
           variant="outline"
           onClick={() => signIn("github", { callbackUrl: "/" })}
+          className="oauthBtn"
         >
           <FaGithub className="mr-2 h-4 w-4" />
           GitHub
@@ -90,6 +91,7 @@ export function SignInForm({
         <Button
           variant="outline"
           onClick={() => signIn("google", { callbackUrl: "/" })}
+          className="oauthBtn"
         >
           <FcGoogle className="mr-2 h-4 w-4" />
           Google

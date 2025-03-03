@@ -10,6 +10,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
     --primary: 221.2 83.2% 53.3%;
+    --primary2: 209 100% 61%;
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -38,6 +39,7 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
     --primary: 217.2 91.2% 59.8%;
+    --primary2: 217 100% 68%;
     --primary-foreground: 222.2 47.4% 11.2%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -189,5 +191,31 @@
   /* ✅ Cursor */
   button {
     cursor: pointer;
+  }
+
+  /* ✅ Active Tab Styling */
+  button[data-state="active"] {
+    color: hsl(var(--destructive-foreground));
+    background: hsl(var(--primary));
+  }
+
+  /* ✅ Inactive Tab Styling */
+  button[data-state="inactive"] {
+    color: hsl(var(--primary-secondary));
+    background: hsl(var(--secondary));
+  }
+
+  .signupBtn, .signinBtn {
+    color: hsl(var(--destructive-foreground));
+  }
+
+  .signinBtn:hover, .signupBtn:hover {
+    color: hsl(var(--destructive-foreground));
+    background: hsl(var(--primary2));
+  }
+
+  .oauthBtn:hover {
+    color: hsl(var(--foreground));
+    background: hsl(var(--secondary));
   }
 }

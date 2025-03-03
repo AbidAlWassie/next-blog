@@ -73,7 +73,7 @@ export function SignUpForm({ onSuccess, onError }: SignUpFormProps) {
           required
         />
       </div>
-      <Button type="submit" className="w-full" disabled={isLoading}>
+      <Button type="submit" className="signupBtn w-full" disabled={isLoading}>
         {isLoading ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
