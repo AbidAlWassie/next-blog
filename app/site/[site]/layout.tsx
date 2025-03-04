@@ -10,8 +10,10 @@ interface LayoutProps {
 
 export async function generateMetadata({
   params,
-}: LayoutProps): Promise<Metadata> {
-  const { site } = params;
+}: {
+  params: { site: string };
+}): Promise<Metadata> {
+  const { site } = await params;
 
   const siteData = await prisma.site.findUnique({
     where: {
@@ -30,7 +32,7 @@ export async function generateMetadata({
 }
 
 export default async function SiteLayout({ children, params }: LayoutProps) {
-  const { site } = params;
+  const { site } = await params;
 
   const siteData = await prisma.site.findUnique({
     where: {
