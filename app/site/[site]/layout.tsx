@@ -5,14 +5,12 @@ import type { ReactNode } from "react";
 
 interface LayoutProps {
   children: ReactNode;
-  params: { site: string };
+  params: Promise<{ site: string }>;
 }
 
 export async function generateMetadata({
   params,
-}: {
-  params: { site: string };
-}): Promise<Metadata> {
+}: LayoutProps): Promise<Metadata> {
   const { site } = await params;
 
   const siteData = await prisma.site.findUnique({
@@ -62,7 +60,7 @@ export default async function SiteLayout({ children, params }: LayoutProps) {
 
       <footer className="border-t py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center ">
+          <div className="text-center">
             <p>
               © {new Date().getFullYear()} {siteData.name}. All rights reserved.
             </p>
