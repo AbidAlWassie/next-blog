@@ -1,6 +1,7 @@
 import { auth } from "@/app/(auth)/auth";
 import { Navbar } from "@/components/Navbar";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { Toaster } from "@/components/ui/sonner";
 import { redirect } from "next/navigation";
 import type React from "react";
 
@@ -25,7 +26,8 @@ export default async function AppLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <main>{children}</main>
+          <Toaster />
         </ThemeProvider>
       </main>
     </div>

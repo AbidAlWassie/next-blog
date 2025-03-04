@@ -3,8 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Loader, Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 import { editSite } from "../actions";
 
 type Site = {
@@ -33,6 +35,10 @@ export function EditSiteForm({ site }: { site: Site }) {
     setIsLoading(false);
     if (response.success) {
       router.push(`/admin/site/${site.id}`);
+      toast.success("Site updated successfully!");
+    } else {
+      toast.error("Failed to update site.");
+      console.error("Error updating site:", response.message);
     }
   };
 
@@ -40,7 +46,7 @@ export function EditSiteForm({ site }: { site: Site }) {
     <form onSubmit={handleSubmit} className="p-4">
       <div className="grid gap-4 py-4">
         <div className="grid grid-cols-4 items-center gap-4">
-          <label htmlFor="name" className="text-right">
+          <label htmlFor="name" className="text-left">
             Name
           </label>
           <Input
@@ -53,7 +59,7 @@ export function EditSiteForm({ site }: { site: Site }) {
           />
         </div>
         <div className="grid grid-cols-4 items-center gap-4">
-          <label htmlFor="description" className="text-right">
+          <label htmlFor="description" className="text-left">
             Description
           </label>
           <Textarea
@@ -66,7 +72,7 @@ export function EditSiteForm({ site }: { site: Site }) {
           />
         </div>
         <div className="grid grid-cols-4 items-center gap-4">
-          <label htmlFor="subdomain" className="text-right">
+          <label htmlFor="subdomain" className="text-left">
             Subdomain
           </label>
           <Input
@@ -81,7 +87,16 @@ export function EditSiteForm({ site }: { site: Site }) {
       </div>
       <div className="flex justify-end">
         <Button className="colored" type="submit" disabled={isLoading}>
-          {isLoading ? "Saving..." : "Save Changes"}
+          {isLoading ? (
+            <>
+              <Loader /> Saving...
+            </>
+          ) : (
+            <>
+              <Save />
+              Save Changes
+            </>
+          )}
         </Button>
       </div>
     </form>

@@ -63,7 +63,7 @@ export async function createSite(formData: FormData) {
       },
     });
 
-    revalidatePath("/admin/dashboard");
+    revalidatePath("/dashboard");
 
     return {
       success: true,

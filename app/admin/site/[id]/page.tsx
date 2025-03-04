@@ -4,11 +4,11 @@ import { prisma } from "@/lib/prisma";
 import { ArrowBigLeft, Settings } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { Suspense } from "react";
 import CreatePostButton from "./components/CreatePostBtn";
 import { Dropdown } from "./components/Dropdown";
 import { EditDeleteButtons } from "./components/EditDeleteBtn";
 import { EditSiteForm } from "./components/EditSiteForm";
-import { Suspense } from "react";
 import Loading from "./loading";
 
 interface Site {
@@ -98,29 +98,28 @@ export default async function SitePage({ params }: PageParams) {
           <CreatePostButton siteId={site.id} />
         </div>
         <Suspense fallback={<Loading />}>
-        
-        {site.posts.length === 0 ? (
-          <div className="text-center py-12 rounded-lg">
-            <h3 className="text-lg font-medium">No posts yet</h3>
-            <p className="mt-2">Get started by creating your first post.</p>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {site.posts.map((post) => (
-              <div key={post.id} className="border rounded-lg p-6">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="text-lg font-medium">{post.title}</h3>
-                    <p className="mt-1">
-                      {new Date(post.createdAt).toLocaleDateString()}
-                    </p>
+          {site.posts.length === 0 ? (
+            <div className="text-center py-12 rounded-lg">
+              <h3 className="text-lg font-medium">No posts yet</h3>
+              <p className="mt-2">Get started by creating your first post.</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {site.posts.map((post) => (
+                <div key={post.id} className="border rounded-lg p-6">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="text-lg font-medium">{post.title}</h3>
+                      <p className="mt-1">
+                        {new Date(post.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <EditDeleteButtons postId={post.id} />
                   </div>
-                  <EditDeleteButtons postId={post.id} />
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
         </Suspense>
       </div>
     </div>

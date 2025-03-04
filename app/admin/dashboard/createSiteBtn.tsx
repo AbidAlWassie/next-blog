@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { SquarePlus } from "lucide-react";
+import { CirclePlus, Loader, SquarePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createSite } from "./actions";
@@ -99,8 +99,21 @@ export default function CreateSiteButton() {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Creating..." : "Create Site"}
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="text-destructive-foreground"
+            >
+              {isLoading ? (
+                <>
+                  <Loader />
+                  Creating...
+                </>
+              ) : (
+                <>
+                  <CirclePlus /> Create Site
+                </>
+              )}
             </Button>
           </DialogFooter>
         </form>

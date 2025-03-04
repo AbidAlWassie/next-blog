@@ -30,7 +30,7 @@ export function Navbar({ user }: NavbarProps) {
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              <Link href="/admin/dashboard" className="text-xl font-bold">
+              <Link href="/dashboard" className="text-xl font-bold">
                 📃Next Blog
               </Link>
             </div>

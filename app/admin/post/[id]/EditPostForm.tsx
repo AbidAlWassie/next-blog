@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 import { editPost } from "../../site/[id]/actions";
 
 type Post = {
@@ -31,6 +32,9 @@ export function EditPostForm({ post }: { post: Post }) {
     setIsLoading(false);
     if (response.success) {
       router.push(`/admin/site/${post.siteId}`);
+      toast.success("Post saved successfully!");
+    } else {
+      toast.error("Failed to save post.");
     }
   };
 

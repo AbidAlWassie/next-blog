@@ -15,8 +15,8 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 import { deletePost, deleteSite } from "../actions";
-
 interface DeleteConfirmationProps {
   id: string;
   type: "site" | "post";
@@ -40,15 +40,17 @@ export function DeleteConfirmation({
         const formData = new FormData();
         formData.append("siteId", id);
         await deleteSite(formData);
-        router.push("/admin/dashboard");
+        router.push("/dashboard");
       } else {
         const formData = new FormData();
         formData.append("postId", id);
         await deletePost(formData);
         router.refresh();
         onSuccess?.();
+        toast.success("Post deleted successfully!");
       }
     } catch (error) {
+      toast.error("Failed to delete.");
       console.error("Error deleting:", error);
     } finally {
       setIsDeleting(false);

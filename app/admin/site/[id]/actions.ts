@@ -344,16 +344,16 @@ export async function editSite(formData: FormData) {
 }
 
 export async function deleteSite(formData: FormData) {
-  const session = await auth()
+  const session = await auth();
 
   if (!session?.user) {
     return {
       success: false,
       message: "Not authenticated",
-    }
+    };
   }
 
-  const siteId = formData.get("siteId") as string
+  const siteId = formData.get("siteId") as string;
 
   try {
     // Verify that the site belongs to the user
@@ -362,13 +362,13 @@ export async function deleteSite(formData: FormData) {
         id: siteId,
         userId: session.user.id,
       },
-    })
+    });
 
     if (!site) {
       return {
         success: false,
         message: "Site not found or you do not have permission",
-      }
+      };
     }
 
     // Delete the site (this will cascade delete all posts)
@@ -376,19 +376,19 @@ export async function deleteSite(formData: FormData) {
       where: {
         id: siteId,
       },
-    })
+    });
 
-    revalidatePath(`/admin/dashboard`)
+    revalidatePath(`/dashboard`);
 
     return {
       success: true,
       message: "Site deleted successfully",
-    }
+    };
   } catch (error) {
-    console.error("Error deleting site:", error)
+    console.error("Error deleting site:", error);
     return {
       success: false,
       message: "Something went wrong",
-    }
+    };
   }
 }
