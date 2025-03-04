@@ -1,14 +1,36 @@
 import { prisma } from "@/lib/prisma";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
 interface LayoutProps {
   children: ReactNode;
-  params: Promise<{ site: string }>;
+  params: { site: string };
+}
+
+export async function generateMetadata({
+  params,
+}: LayoutProps): Promise<Metadata> {
+  const { site } = params;
+
+  const siteData = await prisma.site.findUnique({
+    where: {
+      subdomain: site,
+    },
+  });
+
+  if (!siteData) {
+    notFound();
+  }
+
+  return {
+    title: siteData.name,
+    description: siteData.description,
+  };
 }
 
 export default async function SiteLayout({ children, params }: LayoutProps) {
-  const { site } = await params;
+  const { site } = params;
 
   const siteData = await prisma.site.findUnique({
     where: {
