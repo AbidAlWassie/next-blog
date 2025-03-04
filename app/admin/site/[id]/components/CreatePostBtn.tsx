@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { SquarePen } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { createPost } from "./actions";
+import { createPost } from "../actions";
 
 export default function CreatePostButton({ siteId }: { siteId: string }) {
   const [open, setOpen] = useState(false);

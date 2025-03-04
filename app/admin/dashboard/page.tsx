@@ -1,9 +1,9 @@
-// app\admin\dashboard\page.tsx
 import { auth } from "@/app/(auth)/auth";
 import { prisma } from "@/lib/prisma";
+import { ExternalLink, Wrench } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import CreateSiteButton from "./create-site-button";
+import CreateSiteButton from "./createSiteBtn";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -50,15 +50,20 @@ export default async function DashboardPage() {
                     </span>
                   </p>
                 </div>
-                <div className="mt-6 flex space-x-3">
-                  <Link href={`/admin/site/${site.id}`} className="">
+                <div className="mt-6 flex space-x-4">
+                  <Link
+                    href={`/admin/site/${site.id}`}
+                    className="flex justify-center items-center bg-primary text-destructive-foreground p-2 rounded-md"
+                  >
+                    <Wrench size={16} strokeWidth={3} className="mx-1" />
                     Manage
                   </Link>
                   <Link
                     href={`${process.env.PROTOCOL}${site.subdomain}.${process.env.BASE_DOMAIN}`}
-                    className=""
+                    className="flex justify-center items-center bg-accent text-accent-foreground p-2 rounded-md"
                     target="_blank"
                   >
+                    <ExternalLink size={16} strokeWidth={3} className="mx-1" />
                     View Site
                   </Link>
                 </div>

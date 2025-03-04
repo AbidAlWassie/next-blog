@@ -1,14 +1,15 @@
-// app\admin\site\[id]\page.tsx
 import { auth } from "@/app/(auth)/auth";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
 import { ArrowBigLeft, Settings } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import CreatePostButton from "./CreatePostBtn";
-import { Dropdown } from "./Dropdown";
-import { EditDeleteButtons } from "./EditDeleteBtn";
-import { EditSiteForm } from "./EditSiteForm";
+import CreatePostButton from "./components/CreatePostBtn";
+import { Dropdown } from "./components/Dropdown";
+import { EditDeleteButtons } from "./components/EditDeleteBtn";
+import { EditSiteForm } from "./components/EditSiteForm";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 interface Site {
   id: string;
@@ -96,6 +97,8 @@ export default async function SitePage({ params }: PageParams) {
           <h2 className="text-xl font-semibold mb-4">Posts</h2>
           <CreatePostButton siteId={site.id} />
         </div>
+        <Suspense fallback={<Loading />}>
+        
         {site.posts.length === 0 ? (
           <div className="text-center py-12 rounded-lg">
             <h3 className="text-lg font-medium">No posts yet</h3>
@@ -118,6 +121,7 @@ export default async function SitePage({ params }: PageParams) {
             ))}
           </div>
         )}
+        </Suspense>
       </div>
     </div>
   );

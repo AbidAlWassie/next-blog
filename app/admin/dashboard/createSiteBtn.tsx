@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { SquarePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createSite } from "./actions";
@@ -43,7 +44,8 @@ export default function CreateSiteButton() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="bg-blue-500 text-white dark:bg-blue-800 dark:hover:bg-blue-700">
-          Create New Site
+          <SquarePlus />
+          Create Site
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-background">

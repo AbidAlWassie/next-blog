@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { deletePost, deleteSite } from "./actions";
+import { deletePost, deleteSite } from "../actions";
 
 interface DeleteConfirmationProps {
   id: string;

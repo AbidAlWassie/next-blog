@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 interface PageProps {
   params: Promise<{
@@ -47,33 +49,34 @@ export default async function PostPage({ params }: PageProps) {
       >
         ← Back to {post.site.name}
       </Link>
-
       <article className="prose lg:prose-xl mx-auto">
-        <h1>{post.title}</h1>
+        <Suspense fallback={<Loading />}>
+          <h1>{post.title}</h1>
 
-        <div className="flex items-center space-x-4 my-6">
-          {post.site.user.image && (
-            <Image
-              width={40}
-              height={40}
-              src={post.site.user.image || "/placeholder.svg"}
-              alt={post.site.user.name || "Author"}
-              className="h-10 w-10 rounded-full"
-            />
-          )}
-          <div>
-            <div className="font-medium">{post.site.user.name}</div>
+          <div className="flex items-center space-x-4 my-6">
+            {post.site.user.image && (
+              <Image
+                width={40}
+                height={40}
+                src={post.site.user.image || "/placeholder.svg"}
+                alt={post.site.user.name || "Author"}
+                className="h-10 w-10 rounded-full"
+              />
+            )}
             <div>
-              {new Date(post.createdAt).toLocaleDateString("en-US", {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-              })}
+              <div className="font-medium">{post.site.user.name}</div>
+              <div>
+                {new Date(post.createdAt).toLocaleDateString("en-US", {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="mt-8 whitespace-pre-wrap">{post.content}</div>
+          <div className="mt-8 whitespace-pre-wrap">{post.content}</div>
+        </Suspense>
       </article>
     </div>
   );

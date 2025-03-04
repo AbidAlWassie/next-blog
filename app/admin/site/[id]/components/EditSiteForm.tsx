@@ -1,4 +1,3 @@
-// app\admin\site\[id]\Dropdown.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -6,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { editSite } from "./actions";
+import { editSite } from "../actions";
 
 type Site = {
   id: string;
