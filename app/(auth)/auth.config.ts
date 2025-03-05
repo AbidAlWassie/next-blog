@@ -10,6 +10,13 @@ import Google from "next-auth/providers/google";
 
 const prisma = new PrismaClient();
 
+const getBaseDomain = () => {
+  if (process.env.NODE_ENV === "production") {
+    return ".frostcore.tech";
+  }
+  return undefined; // For development, don't set a domain
+};
+
 export default {
   adapter: PrismaAdapter(prisma),
   pages: {
@@ -88,6 +95,18 @@ export default {
         token.sub = user.id;
       }
       return token;
+    },
+  },
+  cookies: {
+    sessionToken: {
+      name: "next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+        domain: getBaseDomain(),
+      },
     },
   },
 } satisfies NextAuthConfig;

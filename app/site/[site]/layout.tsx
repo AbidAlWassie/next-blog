@@ -1,3 +1,5 @@
+import { auth } from "@/app/(auth)/auth";
+import { Navbar } from "@/components/Navbar";
 import { prisma } from "@/lib/prisma";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -10,7 +12,9 @@ interface LayoutProps {
 
 export async function generateMetadata({
   params,
-}: LayoutProps): Promise<Metadata> {
+}: {
+  params: Promise<{ site: string }>;
+}): Promise<Metadata> {
   const { site } = await params;
 
   const siteData = await prisma.site.findUnique({
@@ -32,6 +36,11 @@ export async function generateMetadata({
 export default async function SiteLayout({ children, params }: LayoutProps) {
   const { site } = await params;
 
+  const session = await auth();
+
+  console.log("Site layout - Host:", site);
+  console.log("Site layout - Session:", session?.user);
+
   const siteData = await prisma.site.findUnique({
     where: {
       subdomain: site,
@@ -45,6 +54,11 @@ export default async function SiteLayout({ children, params }: LayoutProps) {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="border-b">
+        <Navbar
+          user={session?.user || null}
+          siteName={siteData.name}
+          isSubdomain={true}
+        />
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
             <div>
@@ -55,9 +69,7 @@ export default async function SiteLayout({ children, params }: LayoutProps) {
           </div>
         </div>
       </header>
-
       <main className="flex-1">{children}</main>
-
       <footer className="border-t py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">

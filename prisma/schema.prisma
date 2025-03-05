@@ -20,8 +20,9 @@ model User {
   authenticator    Authenticator[]
   sessions         Session[]
   sites            Site[]
+  comments         Comment[]       // comments relation
+  reactions        Reaction[]      // reactions relation
 }
-
 
 model Account {
   id                String  @id @default(cuid())
@@ -74,7 +75,6 @@ model Authenticator {
   @@id([userId, credentialID])
 }
 
-
 model Site {
   id          String    @id @default(cuid())
   name        String
@@ -102,7 +102,54 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  comments  Comment[] // comments relation
+  reactions Reaction[] // reactions relation
+
   @@unique([siteId, slug])
   @@index([siteId])
+}
+
+// New model for comments
+model Comment {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parentId  String?  // For nested comments
+  parent    Comment? @relation("CommentToComment", fields: [parentId], references: [id], onDelete: SetNull)
+  replies   Comment[] @relation("CommentToComment")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([postId])
+  @@index([userId])
+  @@index([parentId])
+}
+
+// New model for reactions
+model Reaction {
+  id        String   @id @default(cuid())
+  type      ReactionType
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([postId, userId, type])
+  @@index([postId])
+  @@index([userId])
+}
+
+// Enum for reaction types
+enum ReactionType {
+  LIKE
+  LOVE
+  HAHA
+  WOW
+  SAD
+  ANGRY
 }
 
