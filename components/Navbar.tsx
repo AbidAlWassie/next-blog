@@ -51,7 +51,7 @@ export function Navbar({ user, siteName, isSubdomain = false }: NavbarProps) {
       )}`;
     }
 
-    return "/signin";
+    return `/signin?callbackUrl=${encodeURIComponent(currentUrl)}`;
   };
 
   return (
@@ -135,11 +135,11 @@ export function Navbar({ user, siteName, isSubdomain = false }: NavbarProps) {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <a href={getSignInUrl()}>
+              <Link href={getSignInUrl()}>
                 <Button variant="outline" size="sm">
                   Sign In
                 </Button>
-              </a>
+              </Link>
             )}
           </div>
         </div>

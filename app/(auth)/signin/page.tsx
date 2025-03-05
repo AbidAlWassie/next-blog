@@ -1,3 +1,4 @@
+// app/(auth)/signin/page.tsx
 "use client";
 
 import { signInWithCredentials } from "@/app/(auth)/actions";
@@ -9,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { SignInForm } from "../components/SignInForm";
@@ -20,14 +21,16 @@ export default function SignInPage() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleSignIn = async () => {
     setIsLoading(true);
     try {
+      const callbackUrl = searchParams.get("callbackUrl") || "/";
       const result = await signInWithCredentials({ email, password });
       if (result.success) {
         toast.success("Signed in successfully");
-        router.push("/");
+        router.push(callbackUrl);
         router.refresh();
       } else {
         toast.error(result.error || "Failed to sign in");

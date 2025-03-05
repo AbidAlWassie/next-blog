@@ -29,7 +29,8 @@ export async function createSite(formData: FormData) {
   }
 
   const name = formData.get("name") as string;
-  const subdomain = formData.get("subdomain") as string;
+  let subdomain = formData.get("subdomain") as string;
+  subdomain = subdomain.toLowerCase();
   const description = formData.get("description") as string;
 
   try {

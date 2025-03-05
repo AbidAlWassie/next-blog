@@ -12,7 +12,7 @@ const prisma = new PrismaClient();
 
 const getBaseDomain = () => {
   if (process.env.NODE_ENV === "production") {
-    return ".frostcore.tech";
+    return process.env.COOKIE_DOMAIN;
   }
   return undefined; // For development, don't set a domain
 };
@@ -95,6 +95,19 @@ export default {
         token.sub = user.id;
       }
       return token;
+    },
+    async redirect({ url, baseUrl }) {
+      // Handle callbackUrl for subdomains
+      try {
+        const callbackUrl = new URL(url).searchParams.get("callbackUrl");
+        if (callbackUrl) {
+          return callbackUrl;
+        }
+        return url.startsWith(baseUrl) ? url : baseUrl;
+      } catch (error) {
+        console.error("Invalid URL in redirect callback:", error);
+        return baseUrl;
+      }
     },
   },
   cookies: {

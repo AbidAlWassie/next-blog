@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { CirclePlus, Loader, SquarePlus } from "lucide-react";
+import { CirclePlus, Loader, SquarePlus, TriangleAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createSite } from "./actions";
@@ -23,11 +23,13 @@ import { createSite } from "./actions";
 export default function CreateSiteButton() {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsLoading(true);
+    setError(null);
 
     const formData = new FormData(event.currentTarget);
     const response = await createSite(formData);
@@ -37,6 +39,8 @@ export default function CreateSiteButton() {
     if (response.success) {
       setOpen(false);
       router.refresh();
+    } else {
+      setError(response.message || "An error occurred. Please try again.");
     }
   }
 
@@ -97,6 +101,12 @@ export default function CreateSiteButton() {
                 className="col-span-3"
               />
             </div>
+            {error && (
+              <div className="flex justify-center items-center text-red-400 text-center">
+                <TriangleAlert className="mr-2" />
+                {error}
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button
