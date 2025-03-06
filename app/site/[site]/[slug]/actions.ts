@@ -43,6 +43,17 @@ export async function createComment(data: z.infer<typeof CommentSchema>) {
     },
   });
 
+  // Get the site and slug for revalidation
+  const postWithSite = await prisma.post.findUnique({
+    where: { id: validatedData.postId },
+    include: { site: true },
+  });
+
+  // Revalidate the path for the site and slug
+  if (postWithSite) {
+    revalidatePath(`/site/${postWithSite.site.subdomain}/${postWithSite.slug}`);
+  }
+
   return comment;
 }
 
