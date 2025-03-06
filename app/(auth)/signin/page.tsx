@@ -1,4 +1,3 @@
-// app/(auth)/signin/page.tsx
 "use client";
 
 import { signInWithCredentials } from "@/app/(auth)/actions";

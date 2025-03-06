@@ -1,4 +1,3 @@
-// components/Navbar.tsx
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -15,7 +14,6 @@ import {
 import { LogOut, Settings, User } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { ModeToggle } from "./ToggleTheme";
 
 type NavbarProps = {
@@ -29,30 +27,6 @@ type NavbarProps = {
 };
 
 export function Navbar({ user, siteName, isSubdomain = false }: NavbarProps) {
-  const [currentHost, setCurrentHost] = useState<string>("");
-
-  useEffect(() => {
-    // Get the current hostname
-    const hostname = window.location.hostname;
-    setCurrentHost(hostname);
-  }, []);
-
-  // Determine the sign-in redirect URL
-  const getSignInUrl = () => {
-    const currentUrl =
-      typeof window !== "undefined" ? window.location.href : "";
-    const mainDomain = process.env.BASE_DOMAIN;
-
-    if (isSubdomain) {
-      const protocol = process.env.PROTOCOL;
-      return `${protocol}${mainDomain}/signin?callbackUrl=${encodeURIComponent(
-        currentUrl
-      )}`;
-    }
-
-    return `/signin?callbackUrl=${encodeURIComponent(currentUrl)}`;
-  };
-
   return (
     <nav className="border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -134,11 +108,11 @@ export function Navbar({ user, siteName, isSubdomain = false }: NavbarProps) {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <a href={getSignInUrl()}>
+              <Link href="/signin">
                 <Button variant="outline" size="sm">
                   Sign In
                 </Button>
-              </a>
+              </Link>
             )}
           </div>
         </div>

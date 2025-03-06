@@ -96,18 +96,9 @@ export default {
       }
       return token;
     },
-    async redirect({ url, baseUrl }) {
-      // Handle callbackUrl for subdomains
-      try {
-        const callbackUrl = new URL(url).searchParams.get("callbackUrl");
-        if (callbackUrl) {
-          return callbackUrl;
-        }
-        return url.startsWith(baseUrl) ? url : baseUrl;
-      } catch (error) {
-        console.error("Invalid URL in redirect callback:", error);
-        return baseUrl;
-      }
+    async redirect({ baseUrl }) {
+      // Redirect to /dashboard after successful login
+      return `${baseUrl}/dashboard`;
     },
   },
   cookies: {
