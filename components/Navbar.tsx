@@ -98,9 +98,7 @@ export function Navbar({ user, siteName, isSubdomain = false }: NavbarProps) {
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    onClick={() =>
-                      signOut({ callbackUrl: isSubdomain ? "/" : "/signin" })
-                    }
+                    onClick={() => signOut({ callbackUrl: "/signin" })}
                   >
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
@@ -108,7 +106,7 @@ export function Navbar({ user, siteName, isSubdomain = false }: NavbarProps) {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Link href="/signin">
+              <Link href="https://frostcore.tech/signin">
                 <Button variant="outline" size="sm">
                   Sign In
                 </Button>
