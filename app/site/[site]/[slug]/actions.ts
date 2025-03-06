@@ -14,20 +14,26 @@ const CommentSchema = z.object({
   parentId: z.string().optional(),
 });
 
-export async function createComment(data: z.infer<typeof CommentSchema>) {
+export async function createComment(data: {
+  postId: string;
+  content: string;
+  parentId?: string;
+}) {
   const session = await getSession();
-  if (!session || !session.user || !session.user.id) {
+  if (!session) {
     throw new Error("You must be logged in to comment.");
   }
 
-  const validatedData = CommentSchema.parse(data);
+  if (!session.user || !session.user.id) {
+    throw new Error("User ID not found");
+  }
 
   const comment = await prisma.comment.create({
     data: {
-      content: validatedData.content,
-      postId: validatedData.postId,
+      content: data.content,
+      postId: data.postId,
+      parentId: data.parentId,
       userId: session.user.id,
-      parentId: validatedData.parentId || null,
     },
     include: {
       user: {
@@ -40,26 +46,7 @@ export async function createComment(data: z.infer<typeof CommentSchema>) {
     },
   });
 
-  // Get the site and slug for revalidation
-  const postWithSite = await prisma.post.findUnique({
-    where: { id: validatedData.postId },
-    include: { site: true },
-  });
-
-  if (postWithSite) {
-    revalidatePath(`/site/${postWithSite.site.subdomain}/${postWithSite.slug}`);
-  }
-
-  return {
-    ...comment,
-    postId: validatedData.postId,
-    updatedAt: new Date(),
-    userId: session.user.id,
-    user: {
-      ...comment.user,
-      name: comment.user.name || "Anonymous",
-    },
-  };
+  return comment;
 }
 
 // Reaction management

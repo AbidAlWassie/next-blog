@@ -40,7 +40,7 @@ export function CommentForm({ postId, parentId, onSuccess }: CommentFormProps) {
       const newComment = await createComment({
         postId,
         content,
-        parentId: parentId ?? undefined,
+        parentId,
       });
       setContent("");
       onSuccess?.({
@@ -48,6 +48,10 @@ export function CommentForm({ postId, parentId, onSuccess }: CommentFormProps) {
         createdAt: newComment.createdAt.toISOString(),
         updatedAt: newComment.updatedAt.toISOString(),
         parentId: newComment.parentId ?? undefined,
+        user: {
+          ...newComment.user,
+          name: newComment.user.name ?? "",
+        },
       });
     } catch (error) {
       console.error("Failed to submit comment:", error);
