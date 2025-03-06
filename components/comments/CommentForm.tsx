@@ -1,23 +1,35 @@
 "use client";
 
-import type React from "react";
-
 import { createComment } from "@/app/site/[site]/[slug]/actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { useRouter } from "next/navigation";
+import type React from "react";
 import { useState } from "react";
+
+interface CommentWithUser {
+  id: string;
+  content: string;
+  user: {
+    id: string;
+    name: string;
+    image?: string | null;
+  };
+  createdAt: string;
+  parentId?: string;
+  postId: string;
+  userId: string;
+  updatedAt: string;
+}
 
 interface CommentFormProps {
   postId: string;
   parentId?: string;
-  onSuccess?: () => void;
+  onSuccess?: (newComment: CommentWithUser) => void;
 }
 
 export function CommentForm({ postId, parentId, onSuccess }: CommentFormProps) {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,14 +37,18 @@ export function CommentForm({ postId, parentId, onSuccess }: CommentFormProps) {
 
     setIsSubmitting(true);
     try {
-      await createComment({
+      const newComment = await createComment({
         postId,
         content,
-        parentId,
+        parentId: parentId ?? undefined,
       });
       setContent("");
-      router.refresh();
-      onSuccess?.();
+      onSuccess?.({
+        ...newComment,
+        createdAt: newComment.createdAt.toISOString(),
+        updatedAt: newComment.updatedAt.toISOString(),
+        parentId: newComment.parentId ?? undefined,
+      });
     } catch (error) {
       console.error("Failed to submit comment:", error);
     } finally {

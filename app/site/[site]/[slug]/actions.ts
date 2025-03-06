@@ -3,11 +3,11 @@
 import { auth } from "@/app/(auth)/auth";
 import { prisma } from "@/lib/prisma";
 import { ReactionType } from "@prisma/client";
+import { getSession } from "next-auth/react";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
-// Comment creation
 const CommentSchema = z.object({
   postId: z.string(),
   content: z.string().min(1),
@@ -15,34 +15,28 @@ const CommentSchema = z.object({
 });
 
 export async function createComment(data: z.infer<typeof CommentSchema>) {
-  const session = await auth();
-
-  if (!session?.user) {
-    redirect("/signin");
+  const session = await getSession();
+  if (!session || !session.user || !session.user.id) {
+    throw new Error("You must be logged in to comment.");
   }
 
   const validatedData = CommentSchema.parse(data);
-
-  // Verify the post exists
-  const post = await prisma.post.findUnique({
-    where: { id: validatedData.postId },
-  });
-
-  if (!post) {
-    throw new Error("Post not found");
-  }
-
-  // Create the comment
-  if (!session.user.id) {
-    throw new Error("User ID not found");
-  }
 
   const comment = await prisma.comment.create({
     data: {
       content: validatedData.content,
       postId: validatedData.postId,
       userId: session.user.id,
-      parentId: validatedData.parentId,
+      parentId: validatedData.parentId || null,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+        },
+      },
     },
   });
 
@@ -56,7 +50,16 @@ export async function createComment(data: z.infer<typeof CommentSchema>) {
     revalidatePath(`/site/${postWithSite.site.subdomain}/${postWithSite.slug}`);
   }
 
-  return comment;
+  return {
+    ...comment,
+    postId: validatedData.postId,
+    updatedAt: new Date(),
+    userId: session.user.id,
+    user: {
+      ...comment.user,
+      name: comment.user.name || "Anonymous",
+    },
+  };
 }
 
 // Reaction management

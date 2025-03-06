@@ -8,7 +8,8 @@ import { MessageSquare } from "lucide-react";
 import { useState } from "react";
 import { CommentForm } from "./CommentForm";
 
-type CommentWithUser = Comment & {
+type CommentWithUser = Omit<Comment, "parentId"> & {
+  parentId: string | null;
   user: Pick<User, "id" | "name" | "image">;
 };
 
@@ -17,6 +18,7 @@ interface CommentItemProps {
   postId: string;
   replies: CommentWithUser[];
   commentMap: Map<string | null, CommentWithUser[]>;
+  onCommentAdded: (newComment: CommentWithUser) => void;
 }
 
 export function CommentItem({
@@ -24,6 +26,7 @@ export function CommentItem({
   postId,
   replies,
   commentMap,
+  onCommentAdded,
 }: CommentItemProps) {
   const [showReplyForm, setShowReplyForm] = useState(false);
 
@@ -65,7 +68,19 @@ export function CommentItem({
             <CommentForm
               postId={postId}
               parentId={comment.id}
-              onSuccess={() => setShowReplyForm(false)}
+              onSuccess={(newComment) => {
+                setShowReplyForm(false);
+                onCommentAdded({
+                  ...newComment,
+                  parentId: newComment.parentId || null,
+                  createdAt: new Date(newComment.createdAt),
+                  updatedAt: new Date(newComment.updatedAt),
+                  user: {
+                    ...newComment.user,
+                    image: newComment.user.image || null,
+                  },
+                });
+              }}
             />
           </div>
         )}
@@ -79,6 +94,7 @@ export function CommentItem({
                 postId={postId}
                 replies={commentMap.get(reply.id) || []}
                 commentMap={commentMap}
+                onCommentAdded={onCommentAdded}
               />
             ))}
           </div>

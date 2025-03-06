@@ -1,4 +1,6 @@
+"use client"
 import type { Comment, User } from "@prisma/client";
+import { useState } from "react";
 import { CommentItem } from "./CommentItem";
 
 type CommentWithUser = Comment & {
@@ -11,6 +13,12 @@ interface CommentListProps {
 }
 
 export function CommentList({ comments, postId }: CommentListProps) {
+  const [commentList, setCommentList] = useState(comments);
+
+  const handleCommentAdded = (newComment: CommentWithUser) => {
+    setCommentList((prev) => [newComment, ...prev]);
+  };
+
   // Group comments by parentId
   const commentMap = new Map<string | null, CommentWithUser[]>();
 
@@ -18,7 +26,7 @@ export function CommentList({ comments, postId }: CommentListProps) {
   commentMap.set(null, []); // Top-level comments have null parentId
 
   // Group comments by parentId
-  comments.forEach((comment) => {
+  commentList.forEach((comment: CommentWithUser) => {
     const parentId = comment.parentId;
     if (!commentMap.has(parentId)) {
       commentMap.set(parentId, []);
@@ -46,6 +54,7 @@ export function CommentList({ comments, postId }: CommentListProps) {
           postId={postId}
           replies={commentMap.get(comment.id) || []}
           commentMap={commentMap}
+          onCommentAdded={handleCommentAdded}
         />
       ))}
     </div>
