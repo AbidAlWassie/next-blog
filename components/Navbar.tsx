@@ -41,11 +41,10 @@ export function Navbar({ user, siteName, isSubdomain = false }: NavbarProps) {
   const getSignInUrl = () => {
     const currentUrl =
       typeof window !== "undefined" ? window.location.href : "";
-    const isLocalhost = currentHost.includes("localhost");
-    const mainDomain = isLocalhost ? "localhost:3000" : process.env.BASE_DOMAIN;
+    const mainDomain = process.env.BASE_DOMAIN;
 
     if (isSubdomain) {
-      const protocol = isLocalhost ? "http://" : "https://";
+      const protocol = process.env.PROTOCOL;
       return `${protocol}${mainDomain}/signin?callbackUrl=${encodeURIComponent(
         currentUrl
       )}`;
@@ -135,11 +134,11 @@ export function Navbar({ user, siteName, isSubdomain = false }: NavbarProps) {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Link href={getSignInUrl()}>
+              <a href={getSignInUrl()}>
                 <Button variant="outline" size="sm">
                   Sign In
                 </Button>
-              </Link>
+              </a>
             )}
           </div>
         </div>
