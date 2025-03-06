@@ -1,4 +1,5 @@
-"use client"
+"use client";
+
 import type { Comment, User } from "@prisma/client";
 import { useState } from "react";
 import { CommentItem } from "./CommentItem";
@@ -26,7 +27,7 @@ export function CommentList({ comments, postId }: CommentListProps) {
   commentMap.set(null, []); // Top-level comments have null parentId
 
   // Group comments by parentId
-  commentList.forEach((comment: CommentWithUser) => {
+  commentList.forEach((comment) => {
     const parentId = comment.parentId;
     if (!commentMap.has(parentId)) {
       commentMap.set(parentId, []);
