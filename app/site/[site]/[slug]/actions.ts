@@ -14,11 +14,7 @@ const CommentSchema = z.object({
   parentId: z.string().optional(),
 });
 
-export async function createComment(data: {
-  postId: string;
-  content: string;
-  parentId?: string;
-}) {
+export async function createComment(data: z.infer<typeof CommentSchema>) {
   const session = await getSession();
   if (!session) {
     throw new Error("You must be logged in to comment.");
@@ -28,11 +24,13 @@ export async function createComment(data: {
     throw new Error("User ID not found");
   }
 
+  const validatedData = CommentSchema.parse(data);
+
   const comment = await prisma.comment.create({
     data: {
-      content: data.content,
-      postId: data.postId,
-      parentId: data.parentId,
+      content: validatedData.content,
+      postId: validatedData.postId,
+      parentId: validatedData.parentId || null,
       userId: session.user.id,
     },
     include: {
