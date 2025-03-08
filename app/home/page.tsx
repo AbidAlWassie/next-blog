@@ -1,24 +1,65 @@
-// app/home/page.tsx
-import Link from "next/link";
+import { auth } from "@/app/(auth)/auth";
+import { prisma } from "@/lib/prisma";
+import type { Post } from "@/types/post";
+import HomeClientPage from "./client";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const session = await auth();
+
+  // Fetch initial posts on the server for better SEO
+  const initialPostsRaw = await prisma.post.findMany({
+    where: {
+      published: true,
+    },
+    include: {
+      site: {
+        select: {
+          name: true,
+          subdomain: true,
+          user: {
+            select: {
+              name: true,
+              image: true,
+            },
+          },
+        },
+      },
+      comments: {
+        select: {
+          id: true,
+        },
+      },
+      reactions: {
+        select: {
+          type: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 10,
+  });
+
+  // Convert Date objects to strings to avoid serialization issues
+  const initialPosts = initialPostsRaw.map((post) => ({
+    ...post,
+    createdAt: post.createdAt.toISOString(),
+    updatedAt: post.updatedAt.toISOString(),
+  })) as unknown as Post[];
+
+  const totalPosts = await prisma.post.count({
+    where: {
+      published: true,
+    },
+  });
+
+  // Pass data to client component
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
-        <h1 className="text-6xl font-bold">
-          Welcome to <span className="text-blue-600">Next Blog</span>
-        </h1>
-        <p className="mt-3 text-2xl">Get started by creating your own blog</p>
-        <div className="flex flex-wrap items-center justify-around max-w-4xl mt-6">
-          <Link
-            href="/dashboard"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Dashboard &rarr;</h3>
-            <p className="mt-4 text-xl">Manage your blogs and posts</p>
-          </Link>
-        </div>
-      </main>
-    </div>
+    <HomeClientPage
+      user={session?.user || null}
+      initialPosts={initialPosts}
+      hasMore={initialPosts.length < totalPosts}
+    />
   );
 }

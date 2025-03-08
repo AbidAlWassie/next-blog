@@ -83,6 +83,7 @@ export default async function PostPage({
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <article className="prose lg:prose-xl mx-auto">
         <Suspense fallback={<Loading />}>
+          <h1 className="text-2xl font-bold">{post.title}</h1>
           <div className="flex items-center space-x-4 my-6">
             {post.site.user.image && (
               <Image

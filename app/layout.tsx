@@ -1,3 +1,5 @@
+// app\layout.tsx
+import QueryProvider from "@/components/providers/QueryProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
@@ -34,7 +36,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <main>{children}</main>
+          <QueryProvider>
+            <main>{children}</main>
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>
