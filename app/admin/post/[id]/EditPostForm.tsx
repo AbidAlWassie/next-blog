@@ -1,8 +1,10 @@
 "use client";
 
+import type React from "react";
+
+import { TiptapEditor } from "@/components/Editor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -54,19 +56,17 @@ export function EditPostForm({ post }: { post: Post }) {
             required
           />
         </div>
-        <div className="grid grid-cols-4 items-center gap-4">
-          <label htmlFor="content" className="text-right">
+        <div className="grid grid-cols-4 items-start gap-4">
+          <label htmlFor="content" className="text-right pt-2">
             Content
           </label>
-          <Textarea
-            id="content"
-            name="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="col-span-3"
-            rows={5}
-            required
-          />
+          <div className="col-span-3">
+            <TiptapEditor
+              content={content}
+              onChange={setContent}
+              placeholder="Write your post content here..."
+            />
+          </div>
         </div>
       </div>
       <div className="flex justify-end">

@@ -1,5 +1,8 @@
 "use client";
 
+import type React from "react";
+
+import { TiptapEditor } from "@/components/Editor";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -19,6 +22,7 @@ import { createPost } from "../actions";
 export default function CreatePostButton({ siteId }: { siteId: string }) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [content, setContent] = useState("");
   const router = useRouter();
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -26,6 +30,7 @@ export default function CreatePostButton({ siteId }: { siteId: string }) {
     setIsLoading(true);
     const formData = new FormData(event.currentTarget);
     formData.append("siteId", siteId);
+    formData.set("content", content); // Ensure the tiptap content is included
     const response = await createPost(formData);
     setIsLoading(false);
     if (response.success) {
@@ -41,7 +46,7 @@ export default function CreatePostButton({ siteId }: { siteId: string }) {
           <SquarePen /> Create Post
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[700px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Create a new post</DialogTitle>
@@ -62,18 +67,17 @@ export default function CreatePostButton({ siteId }: { siteId: string }) {
                 required
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="content" className="text-right">
+            <div className="grid grid-cols-4 items-start gap-4">
+              <Label htmlFor="content" className="text-right pt-2">
                 Content
               </Label>
-              <textarea
-                id="content"
-                name="content"
-                placeholder="Write your post content here..."
-                className="col-span-3"
-                rows={5}
-                required
-              />
+              <div className="col-span-3">
+                <TiptapEditor
+                  content={content}
+                  onChange={setContent}
+                  placeholder="Write your post content here..."
+                />
+              </div>
             </div>
           </div>
           <div className="flex justify-end">

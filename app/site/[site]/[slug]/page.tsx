@@ -1,6 +1,7 @@
 import { auth } from "@/app/(auth)/auth";
 import { CommentForm } from "@/components/comments/CommentForm";
 import { CommentList } from "@/components/comments/CommentList";
+import { PostContent } from "@/components/posts/PostContent";
 import { ReactionBar } from "@/components/reactions/ReactionBar";
 import { prisma } from "@/lib/prisma";
 import { ReactionType } from "@prisma/client";
@@ -106,7 +107,7 @@ export default async function PostPage({
             </div>
           </div>
 
-          <div className="mt-8 whitespace-pre-wrap">{post.content}</div>
+          <PostContent content={post.content} className="mt-8" />
         </Suspense>
       </article>
 
