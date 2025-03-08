@@ -1,33 +1,37 @@
 "use client";
 
-import type { Comment, User } from "@prisma/client";
-import { useState } from "react";
+import { CommentWithUser } from "@/hooks/useComments";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { CommentItem } from "./CommentItem";
-
-type CommentWithUser = Comment & {
-  user: Pick<User, "id" | "name" | "image">;
-};
 
 interface CommentListProps {
   comments: CommentWithUser[];
   postId: string;
 }
 
-export function CommentList({ comments, postId }: CommentListProps) {
-  const [commentList, setCommentList] = useState(comments);
+export function CommentList({
+  comments: initialComments,
+  postId,
+}: CommentListProps) {
+  const queryClient = useQueryClient();
 
-  const handleCommentAdded = (newComment: CommentWithUser) => {
-    setCommentList((prev) => [newComment, ...prev]);
-  };
+  // Initialize the query cache with the server-provided comments
+  useEffect(() => {
+    queryClient.setQueryData(["comments", postId], initialComments);
+  }, [queryClient, initialComments, postId]);
+
+  // Get comments from the cache
+  const comments =
+    queryClient.getQueryData<CommentWithUser[]>(["comments", postId]) ||
+    initialComments;
 
   // Group comments by parentId
   const commentMap = new Map<string | null, CommentWithUser[]>();
-
-  // Initialize with empty arrays
   commentMap.set(null, []); // Top-level comments have null parentId
 
   // Group comments by parentId
-  commentList.forEach((comment) => {
+  comments.forEach((comment) => {
     const parentId = comment.parentId;
     if (!commentMap.has(parentId)) {
       commentMap.set(parentId, []);
@@ -55,7 +59,6 @@ export function CommentList({ comments, postId }: CommentListProps) {
           postId={postId}
           replies={commentMap.get(comment.id) || []}
           commentMap={commentMap}
-          onCommentAdded={handleCommentAdded}
         />
       ))}
     </div>

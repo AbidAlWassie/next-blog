@@ -1,63 +1,34 @@
 "use client";
 
-import { createComment } from "@/app/site/[site]/[slug]/actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { useComments } from "@/hooks/useComments";
 import type React from "react";
 import { useState } from "react";
-
-interface CommentWithUser {
-  id: string;
-  content: string;
-  user: {
-    id: string;
-    name: string;
-    image?: string | null;
-  };
-  createdAt: string;
-  parentId?: string;
-  postId: string;
-  userId: string;
-  updatedAt: string;
-}
 
 interface CommentFormProps {
   postId: string;
   parentId?: string;
-  onSuccess?: (newComment: CommentWithUser) => void;
+  onSuccess?: () => void;
 }
 
 export function CommentForm({ postId, parentId, onSuccess }: CommentFormProps) {
   const [content, setContent] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { addComment, isAddingComment } = useComments(postId);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim()) return;
 
-    setIsSubmitting(true);
-    try {
-      const newComment = await createComment({
-        postId,
-        content,
-        parentId,
-      });
-      setContent("");
-      onSuccess?.({
-        ...newComment,
-        createdAt: newComment.createdAt.toISOString(),
-        updatedAt: newComment.updatedAt.toISOString(),
-        parentId: newComment.parentId ?? undefined,
-        user: {
-          ...newComment.user,
-          name: newComment.user.name ?? "",
+    addComment(
+      { content, parentId },
+      {
+        onSuccess: () => {
+          setContent("");
+          onSuccess?.();
         },
-      });
-    } catch (error) {
-      console.error("Failed to submit comment:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
+      }
+    );
   };
 
   return (
@@ -70,8 +41,8 @@ export function CommentForm({ postId, parentId, onSuccess }: CommentFormProps) {
         required
       />
       <div className="flex justify-end">
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Submitting..." : parentId ? "Reply" : "Comment"}
+        <Button type="submit" disabled={isAddingComment}>
+          {isAddingComment ? "Submitting..." : parentId ? "Reply" : "Comment"}
         </Button>
       </div>
     </form>
