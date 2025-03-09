@@ -9,7 +9,7 @@ const PostSchema = z.object({
   title: z.string().min(1).max(100),
   content: z.string().min(1),
   siteId: z.string(),
-  tags: z.array(z.string()).optional(),
+  tags: z.string().optional(), // Changed to string to handle JSON
 });
 
 function generateSlug(title: string): string {
@@ -31,14 +31,15 @@ export async function createPost(formData: FormData) {
 
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;
-  const tags = formData.getAll("tags") as string[];
   const siteId = formData.get("siteId") as string;
+  const tagsString = formData.get("tags") as string;
 
   try {
     const validatedFields = PostSchema.parse({
       title,
       content,
       siteId,
+      tags: tagsString,
     });
 
     // Verify that the site belongs to the user
@@ -61,10 +62,10 @@ export async function createPost(formData: FormData) {
 
     // Parse tags from JSON string
     let tags: string[] = [];
-    const tagsString = formData.get("tags") as string;
     if (tagsString) {
       try {
         tags = JSON.parse(tagsString);
+        console.log("Parsed tags:", tags); // Debug log
       } catch (error) {
         console.error("Error parsing tags:", error);
       }
@@ -76,7 +77,7 @@ export async function createPost(formData: FormData) {
         title: validatedFields.title,
         slug,
         content: validatedFields.content,
-        tags: validatedFields.tags,
+        tags: tags,
         siteId: validatedFields.siteId,
         published: true, // You can change this to false if you want drafts
       },
@@ -116,12 +117,13 @@ export async function editPost(formData: FormData) {
   const postId = formData.get("postId") as string;
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;
+  const tagsString = formData.get("tags") as string;
 
   try {
     const validatedFields = PostSchema.omit({ siteId: true }).parse({
       title,
       content,
-      tags: [],
+      tags: tagsString,
     });
 
     // Verify that the post belongs to the user
@@ -144,6 +146,17 @@ export async function editPost(formData: FormData) {
     // Generate slug from title
     const slug = generateSlug(validatedFields.title);
 
+    // Parse tags from JSON string
+    let tags: string[] = [];
+    if (tagsString) {
+      try {
+        tags = JSON.parse(tagsString);
+        console.log("Parsed tags for edit:", tags); // Debug log
+      } catch (error) {
+        console.error("Error parsing tags:", error);
+      }
+    }
+
     // Update the post
     await prisma.post.update({
       where: {
@@ -153,6 +166,7 @@ export async function editPost(formData: FormData) {
         title: validatedFields.title,
         slug,
         content: validatedFields.content,
+        tags: tags,
       },
     });
 

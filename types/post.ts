@@ -25,6 +25,7 @@ export interface Reaction {
 }
 
 export interface Post {
+  tags: never[];
   id: string;
   title: string;
   content: string;

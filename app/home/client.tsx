@@ -2,7 +2,7 @@
 "use client";
 
 import { Navbar } from "@/components/Navbar";
-import { PostContent } from "@/components/posts/PostContent";
+import { PostPreview } from "@/components/posts/PostPreview";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -127,7 +127,7 @@ export default function HomeClientPage({
                 page.posts.map((post, postIndex) => (
                   <Card
                     key={`${pageIndex}-${post.id || postIndex}`}
-                    className="overflow-hidden flex flex-col"
+                    className="overflow-hidden flex flex-col gap-y-2"
                   >
                     <CardHeader className="pb-2">
                       <CardTitle className="line-clamp-2">
@@ -147,7 +147,7 @@ export default function HomeClientPage({
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="flex-grow">
-                      <div className="flex items-center mb-4">
+                      <div className="flex items-center mb-2">
                         {post.site.user.image ? (
                           <Image
                             src={post.site.user.image || "/placeholder.svg"}
@@ -162,7 +162,11 @@ export default function HomeClientPage({
                         <span className="text-sm">{post.site.user.name}</span>
                       </div>
                       {/* <div className="line-clamp-3 text-muted-foreground"> */}
-                      <PostContent content={post.content} className="mt-8" />
+                      <PostPreview
+                        content={post.content}
+                        title={post.title}
+                        tags={post.tags || []}
+                      />
                       {/* </div> */}
                     </CardContent>
                     <CardFooter className="border-t pt-4 flex justify-between items-center">

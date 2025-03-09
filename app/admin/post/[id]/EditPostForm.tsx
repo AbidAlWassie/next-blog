@@ -10,7 +10,6 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { editPost } from "../../site/[id]/actions";
 
-// Update the Post type to include tags
 type Post = {
   id: string;
   title: string;
@@ -25,11 +24,11 @@ export function EditPostForm({ post }: { post: Post }) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  // Add state for tags
+  // state for tags
   const [tags, setTags] = useState(post.tags || []);
   const [tagInput, setTagInput] = useState("");
 
-  // Add this function to handle tag input
+  // handle tag input
   const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && tagInput) {
       e.preventDefault();
@@ -40,7 +39,7 @@ export function EditPostForm({ post }: { post: Post }) {
     }
   };
 
-  // Add this function to remove tags
+  // remove tags
   const removeTag = (tagToRemove: string) => {
     setTags(tags.filter((tag) => tag !== tagToRemove));
   };
@@ -52,8 +51,12 @@ export function EditPostForm({ post }: { post: Post }) {
     formData.append("postId", post.id);
     formData.append("title", title);
     formData.append("content", content);
-    // In the handleSubmit function, add tags to formData
+
+    // stringify the tags array
     formData.append("tags", JSON.stringify(tags));
+
+    console.log("Submitting tags for edit:", tags); // Debug log
+
     const response = await editPost(formData);
     setIsLoading(false);
     if (response.success) {
