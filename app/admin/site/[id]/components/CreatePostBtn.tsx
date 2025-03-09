@@ -70,7 +70,7 @@ export default function CreatePostButton({ siteId }: { siteId: string }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="colored">
+        <Button className="text-colored">
           <SquarePen /> Create Post
         </Button>
       </DialogTrigger>

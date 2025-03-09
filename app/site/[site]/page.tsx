@@ -1,3 +1,5 @@
+import { PostPreview } from "@/components/posts/PostPreview";
+import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
 import Image from "next/image";
 import Link from "next/link";
@@ -61,12 +63,18 @@ export default async function SitePage({ params }: PageProps) {
           siteData.posts.map((post) => (
             <article key={post.id} className="prose lg:prose-xl mx-auto">
               <h2 className="text-2xl font-bold">{post.title}</h2>
-              <p className="mt-2">{post.content}</p>
-              <Link
-                href={`/${post.slug}`}
-                className="text-blue-600 hover:underline"
-              >
-                Read more →
+              <PostPreview
+                content={post.content}
+                title={post.title}
+                tags={post.tags || []}
+              />
+              <Link href={`/${post.slug}`}>
+                <Button
+                  variant="default"
+                  className="mt-4 text-destructive-foreground"
+                >
+                  Read more →
+                </Button>
               </Link>
             </article>
           ))

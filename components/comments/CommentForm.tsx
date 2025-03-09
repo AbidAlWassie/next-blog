@@ -41,7 +41,11 @@ export function CommentForm({ postId, parentId, onSuccess }: CommentFormProps) {
         required
       />
       <div className="flex justify-end">
-        <Button type="submit" disabled={isAddingComment}>
+        <Button
+          type="submit"
+          disabled={isAddingComment}
+          className="text-colored"
+        >
           {isAddingComment ? "Submitting..." : parentId ? "Reply" : "Comment"}
         </Button>
       </div>
