@@ -9,6 +9,7 @@ const PostSchema = z.object({
   title: z.string().min(1).max(100),
   content: z.string().min(1),
   siteId: z.string(),
+  tags: z.array(z.string()).optional(),
 });
 
 function generateSlug(title: string): string {
@@ -30,6 +31,7 @@ export async function createPost(formData: FormData) {
 
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;
+  const tags = formData.getAll("tags") as string[];
   const siteId = formData.get("siteId") as string;
 
   try {
@@ -57,12 +59,24 @@ export async function createPost(formData: FormData) {
     // Generate slug from title
     const slug = generateSlug(validatedFields.title);
 
+    // Parse tags from JSON string
+    let tags: string[] = [];
+    const tagsString = formData.get("tags") as string;
+    if (tagsString) {
+      try {
+        tags = JSON.parse(tagsString);
+      } catch (error) {
+        console.error("Error parsing tags:", error);
+      }
+    }
+
     // Create the post
     await prisma.post.create({
       data: {
         title: validatedFields.title,
         slug,
         content: validatedFields.content,
+        tags: validatedFields.tags,
         siteId: validatedFields.siteId,
         published: true, // You can change this to false if you want drafts
       },
@@ -107,6 +121,7 @@ export async function editPost(formData: FormData) {
     const validatedFields = PostSchema.omit({ siteId: true }).parse({
       title,
       content,
+      tags: [],
     });
 
     // Verify that the post belongs to the user

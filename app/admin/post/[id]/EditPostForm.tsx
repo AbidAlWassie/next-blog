@@ -10,11 +10,13 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { editPost } from "../../site/[id]/actions";
 
+// Update the Post type to include tags
 type Post = {
   id: string;
   title: string;
   content: string;
   siteId: string;
+  tags: string[];
 };
 
 export function EditPostForm({ post }: { post: Post }) {
@@ -23,6 +25,26 @@ export function EditPostForm({ post }: { post: Post }) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
+  // Add state for tags
+  const [tags, setTags] = useState(post.tags || []);
+  const [tagInput, setTagInput] = useState("");
+
+  // Add this function to handle tag input
+  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && tagInput) {
+      e.preventDefault();
+      if (!tags.includes(tagInput.trim())) {
+        setTags([...tags, tagInput.trim()]);
+      }
+      setTagInput("");
+    }
+  };
+
+  // Add this function to remove tags
+  const removeTag = (tagToRemove: string) => {
+    setTags(tags.filter((tag) => tag !== tagToRemove));
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
@@ -30,6 +52,8 @@ export function EditPostForm({ post }: { post: Post }) {
     formData.append("postId", post.id);
     formData.append("title", title);
     formData.append("content", content);
+    // In the handleSubmit function, add tags to formData
+    formData.append("tags", JSON.stringify(tags));
     const response = await editPost(formData);
     setIsLoading(false);
     if (response.success) {
@@ -65,6 +89,39 @@ export function EditPostForm({ post }: { post: Post }) {
               content={content}
               onChange={setContent}
               placeholder="Write your post content here..."
+            />
+          </div>
+        </div>
+        {/* Add this to the form, after the content field */}
+        <div className="grid grid-cols-4 items-start gap-4">
+          <label htmlFor="tags" className="text-right pt-2">
+            Tags
+          </label>
+          <div className="col-span-3">
+            <div className="flex flex-wrap gap-1 mb-2">
+              {tags.map((tag) => (
+                <div
+                  key={tag}
+                  className="bg-muted rounded-full px-2 py-1 text-xs flex items-center"
+                >
+                  {tag}
+                  <button
+                    type="button"
+                    onClick={() => removeTag(tag)}
+                    className="ml-1 text-muted-foreground hover:text-foreground"
+                  >
+                    &times;
+                  </button>
+                </div>
+              ))}
+            </div>
+            <Input
+              id="tags"
+              value={tagInput}
+              onChange={(e) => setTagInput(e.target.value)}
+              onKeyDown={handleTagKeyDown}
+              placeholder="Add tags (press Enter to add)"
+              className="w-full"
             />
           </div>
         </div>

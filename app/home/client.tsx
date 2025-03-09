@@ -1,6 +1,8 @@
+// app\home\client.tsx
 "use client";
 
 import { Navbar } from "@/components/Navbar";
+import { PostContent } from "@/components/posts/PostContent";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -159,9 +161,9 @@ export default function HomeClientPage({
                         )}
                         <span className="text-sm">{post.site.user.name}</span>
                       </div>
-                      <p className="line-clamp-3 text-muted-foreground">
-                        {post.content}
-                      </p>
+                      {/* <div className="line-clamp-3 text-muted-foreground"> */}
+                      <PostContent content={post.content} className="mt-8" />
+                      {/* </div> */}
                     </CardContent>
                     <CardFooter className="border-t pt-4 flex justify-between items-center">
                       <div className="flex items-center space-x-4">
