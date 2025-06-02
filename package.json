@@ -44,7 +44,7 @@
     "react-intersection-observer": "^9.16.0",
     "resend": "^4.1.2",
     "sonner": "^2.0.1",
-    "tailwind-merge": "^3.0.2",
+    "tailwind-merge": "^3.3.0",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.1.0",
     "zod": "^3.24.2"
